@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap">
 <style>
 /* Ein Bildschirm: Kopfzeile, ein Glastisch mit Bank oben und Plätzen im Bogen, darunter Ablage und Steuerung.
-   Fünf Designs als feste Welten (data-skin); Jetons haben feste Casino-Farben. */
+   Sechs Designs als feste Welten (data-skin); Jetons haben feste Casino-Farben. */
 :root {
   --sans: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
   --blur: blur(18px) saturate(160%);
@@ -85,6 +85,18 @@
   --win: #1d7d52; --lose: #c03c43;
   color-scheme: light;
 }
+[data-skin="neon"] {
+  --bg: #06110d;
+  --bg-img: radial-gradient(at 12% 4%, rgba(200,255,0,.20) 0, transparent 45%), radial-gradient(at 95% 92%, rgba(200,255,0,.12) 0, transparent 50%), linear-gradient(180deg, #0b1d16, #06110d 55%, #030a07);
+  --glass: rgba(200,255,0,.05); --glass-hi: rgba(18,40,30,.72); --glass-line: rgba(200,255,0,.26);
+  --shadow: 0 10px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(200,255,0,.10);
+  --fg: #f1ffd6; --muted: #8fa896; --soft: #c8dacb;
+  --btn: radial-gradient(circle at 35% 30%, #f2ffbf, #c8ff00 55%, #9fd000); --btn-fg: #06110d; --btn-shadow: 0 12px 30px rgba(200,255,0,.32);
+  --active: #c8ff00;
+  --back: repeating-linear-gradient(135deg, #c8ff00 0 3px, #8fb800 3px 6px);
+  --win: #c8ff00; --lose: #ff7d6e;
+}
+[data-skin="neon"] .seg button[aria-pressed="true"] { background: #c8ff00; color: #06110d; }
 
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--fg); font-family: var(--sans); -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
@@ -106,6 +118,8 @@ header { display: flex; align-items: center; gap: 10px; position: relative; z-in
 .chev { width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: translateY(-2px) rotate(45deg); transition: transform .25s; opacity: .6; }
 #menu[aria-expanded="true"] .chev { transform: translateY(2px) rotate(-135deg); }
 header .info { margin-left: auto; font-size: 12px; color: var(--muted); text-align: right; }
+.help { width: 30px; height: 30px; flex: none; border-radius: 50%; display: grid; place-items: center; font-size: 15px; font-weight: 600; color: var(--soft);
+  background: var(--glass); border: 1px solid var(--glass-line); }
 
 /* Menü */
 .scrim { position: fixed; inset: 0; z-index: 30; background: var(--scrim); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
@@ -122,7 +136,7 @@ header .info { margin-left: auto; font-size: 12px; color: var(--muted); text-ali
 .seg button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
 .names { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .names input { width: 100%; box-sizing: border-box; font: inherit; font-size: 14px; color: var(--fg); padding: 9px 11px; border-radius: 10px; border: 1px solid var(--glass-line); background: var(--glass); }
-.skins { display: flex; align-items: center; gap: 12px; }
+.skins { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
 .skins .now { font-size: 13px; color: var(--muted); margin-left: auto; }
 .sw { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--glass-line); box-shadow: 0 2px 8px rgba(0,0,0,.25); transition: transform .15s; }
 .sw[aria-pressed="true"] { border-color: var(--active); transform: scale(1.12); }
@@ -131,6 +145,41 @@ header .info { margin-left: auto; font-size: 12px; color: var(--muted); text-ali
 .sw[data-s="smaragd"] { background: linear-gradient(135deg, #21805f, #031511 60%, #c49a42); }
 .sw[data-s="koralle"] { background: linear-gradient(135deg, #ffd29e, #ff9fb4 50%, #c7a8ff); }
 .sw[data-s="eis"]     { background: linear-gradient(135deg, #ffffff, #c4d3e6 55%, #546070); }
+.sw[data-s="neon"]    { background: linear-gradient(135deg, #c8ff00 0 38%, #06110d 62%); }
+
+/* Mehrspieler */
+.mprow { display: flex; gap: 8px; }
+.mprow .pill { flex: 1; padding: 10px 14px; font-size: 14px; }
+.mprow input { flex: 1; min-width: 0; font: inherit; font-size: 16px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--fg);
+  padding: 9px 12px; border-radius: 999px; border: 1px solid var(--glass-line); background: var(--glass); }
+.room { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 10px 14px; border-radius: 14px; background: var(--glass); border: 1px solid var(--glass-line); }
+.room .code { font-size: 26px; font-weight: 700; letter-spacing: .16em; color: var(--active); }
+.plist { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.plist div { display: flex; align-items: center; gap: 8px; }
+.plist .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--win); flex: none; }
+.plist .dot.off { background: var(--muted); opacity: .6; }
+.plist span:nth-child(2) { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.plist em { margin-left: auto; font-style: normal; font-size: 12px; color: var(--muted); }
+.spot .tag { font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.spot.away .hands, .spot.away .ring { opacity: .55; }
+.toast { position: fixed; z-index: 40; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); max-width: calc(100% - 48px); box-sizing: border-box;
+  padding: 10px 16px; border-radius: 999px; font-size: 14px; text-align: center; background: var(--glass-hi); animation: drop .22s ease-out; }
+
+/* Tutorial */
+.tut { gap: 12px; }
+.tut .step { font-size: 12px; color: var(--muted); letter-spacing: .04em; }
+.tut h2 { font-size: 22px; }
+.tut .tb { font-size: 14px; line-height: 1.55; color: var(--soft); display: flex; flex-direction: column; gap: 10px; }
+.tut .tb p { margin: 0; }
+.tut .tb ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.tut .tb b { color: var(--fg); font-weight: 600; }
+.tut .ex { display: flex; justify-content: center; align-items: center; gap: 18px; padding: 8px 0 4px; flex-wrap: wrap; }
+.tut .ex .lbl { font-size: 13px; color: var(--muted); text-align: center; margin-top: 6px; }
+.tut .ex .hand { justify-content: center; }
+.tut .dots { display: flex; justify-content: center; gap: 6px; }
+.tut .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--glass-line); transition: background .2s, width .2s; }
+.tut .dots i.on { width: 16px; border-radius: 3px; background: var(--active); }
+.tut .tskip { align-self: center; font-size: 13px; color: var(--muted); padding: 2px 8px; }
 .ledger { display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
 .ledger .lr { display: flex; justify-content: space-between; gap: 10px; }
 .ledger .lr span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -224,7 +273,7 @@ button.chip:active { transform: translateY(2px); box-shadow: 0 0 0 rgba(0,0,0,.3
 .tray { display: flex; flex-wrap: wrap; gap: 6px; }
 .ctrl.center { justify-content: center; }
 .ctrl .pills { display: flex; gap: 10px; justify-content: center; width: 100%; }
-@media (prefers-reduced-motion: reduce) { .panel, .res, .final, .ripple { animation: none; } .chev, .sw, .ring, .ball { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .panel, .res, .final, .ripple, .toast { animation: none; } .chev, .sw, .ring, .ball { transition: none; } }
 </style>
 </head>
 <body>
@@ -235,16 +284,21 @@ button.chip:active { transform: translateY(2px); box-shadow: 0 0 0 rgba(0,0,0,.3
   <header>
     <button id="menu" aria-expanded="false" aria-controls="panel">Blackjack <span class="chev"></span></button>
     <div class="info num" id="info"></div>
+    <button class="help" id="help" aria-label="Tutorial öffnen">?</button>
   </header>
 
   <div class="panel glass" id="panel" hidden>
+    <div class="sec">
+      <h3>Mehrspieler</h3>
+      <div class="sec" id="mp"></div>
+    </div>
     <div class="sec">
       <h3>Spieler</h3>
       <div class="seg" id="pseg">
         <button data-n="1">1</button><button data-n="2">2</button><button data-n="3">3</button><button data-n="4">4</button><button data-n="5">5</button>
       </div>
       <div class="names" id="names"></div>
-      <p class="note" id="plock" hidden>Die Spieleranzahl steht fest, bis das Spiel beendet ist. Alle spielen bis zum Schluss mit.</p>
+      <p class="note" id="plock" hidden></p>
     </div>
     <div class="sec">
       <h3>Farben</h3>
@@ -254,6 +308,7 @@ button.chip:active { transform: translateY(2px); box-shadow: 0 0 0 rgba(0,0,0,.3
         <button class="sw" data-s="smaragd" aria-label="Smaragd"></button>
         <button class="sw" data-s="koralle" aria-label="Koralle"></button>
         <button class="sw" data-s="eis" aria-label="Eis"></button>
+        <button class="sw" data-s="neon" aria-label="Neon"></button>
         <span class="now" id="skinname"></span>
       </div>
     </div>
@@ -283,6 +338,7 @@ button.chip:active { transform: translateY(2px); box-shadow: 0 0 0 rgba(0,0,0,.3
         <li>Zwei Karten mit gleichem Wert lassen sich teilen, bis zu vier Hände. Geteilte Asse bekommen nur noch je eine Karte, und 21 nach dem Teilen zählt nicht als Blackjack.</li>
         <li>Mindesteinsatz 10 Chips.</li>
       </ul>
+      <button class="pill" id="tutopen">Tutorial ansehen</button>
     </div>
     <button class="pill main" id="end">Spiel beenden</button>
   </div>
@@ -295,6 +351,20 @@ button.chip:active { transform: translateY(2px); box-shadow: 0 0 0 rgba(0,0,0,.3
       <button class="pill main" id="fnew">Neues Spiel</button>
     </div>
   </div>
+
+  <div class="final glass tut" id="tut" hidden role="dialog" aria-modal="true" aria-labelledby="ttitle">
+    <div class="step num" id="tstep"></div>
+    <h2 id="ttitle"></h2>
+    <div class="tb" id="tbody"></div>
+    <div class="dots" id="tdots" aria-hidden="true"></div>
+    <div class="row2">
+      <button class="pill" id="tprev">Zurück</button>
+      <button class="pill main" id="tnext">Weiter</button>
+    </div>
+    <button class="tskip" id="tskip">Tutorial schließen</button>
+  </div>
+
+  <div class="toast glass" id="toast" hidden role="status" aria-live="polite"></div>
 
   <section class="table" id="table">
     <div class="shoe" id="deck"><i></i><i></i><i></i></div>
@@ -310,13 +380,17 @@ button.chip:active { transform: translateY(2px); box-shadow: 0 0 0 rgba(0,0,0,.3
 const SUITS = ['♠', '♥', '♦', '♣'];
 const RANKS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 const MIN = 10, PACK = 1000, MAXP = 5, CHIPS = [10, 25, 50, 100];
-const SKINS = { graphit: 'Graphit', aurora: 'Aurora', smaragd: 'Smaragd', koralle: 'Koralle', eis: 'Eis' };
+const SKINS = { graphit: 'Graphit', aurora: 'Aurora', smaragd: 'Smaragd', koralle: 'Koralle', eis: 'Eis', neon: 'Neon' };
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const sleep = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 120) : ms));
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const eur = v => v.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
 const buzz = () => { try { navigator.vibrate && navigator.vibrate(12); } catch (e) {} };
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
 
 function mkP(i) { return { name: 'Spieler ' + (i + 1), chips: PACK, bought: PACK, played: false, bet: 50, base: 50, hands: [], net: 0 }; }
 let S, seen = new Set(), fx = {};
@@ -345,16 +419,17 @@ const active = () => S.players.slice(0, S.n);
 const cur = () => active()[S.turn.p];
 const curH = () => cur().hands[S.turn.h];
 
+// Im Raum wird nur Aussehen und Steuerung gespeichert, das lokale Spiel bleibt unangetastet.
 function save() {
-  try {
-    localStorage.setItem('bj', JSON.stringify({ n: S.n, skin: S.skin, ctrl: S.ctrl, buyin: S.buyin, rounds: S.rounds,
-      players: S.players.map(p => ({ name: p.name, chips: p.chips, bought: p.bought, played: p.played })) }));
-  } catch (e) {}
+  if (NET.mode !== 'off') { const o = load(); o.skin = S.skin; o.ctrl = S.ctrl; store.set('bj', JSON.stringify(o)); return; }
+  store.set('bj', JSON.stringify({ n: S.n, skin: S.skin, ctrl: S.ctrl, buyin: S.buyin, rounds: S.rounds,
+    players: S.players.map(p => ({ name: p.name, chips: p.chips, bought: p.bought, played: p.played })) }));
 }
-function load() { try { return JSON.parse(localStorage.getItem('bj')) || {}; } catch (e) { return {}; } }
+function load() { try { return JSON.parse(store.get('bj')) || {}; } catch (e) { return {}; } }
 
-// Ablauf
+// Ablauf. Läuft ein Ablauf noch, während das Spiel ersetzt wird (Raum betreten oder verlassen), bricht er ab.
 async function deal() {
+  const s = S;
   S.phase = 'deal'; S.dealer = []; S.hidden = true; S.turn = null;
   for (const p of active()) {
     p.base = p.bet; p.chips -= p.bet; p.played = true; p.net = 0;
@@ -362,11 +437,11 @@ async function deal() {
   }
   render();
   for (let r = 0; r < 2; r++) {
-    for (const p of active()) { p.hands[0].cards.push(draw()); render(); await sleep(300); }
-    S.dealer.push(draw()); render(); await sleep(300);
+    for (const p of active()) { p.hands[0].cards.push(draw()); render(); await sleep(300); if (S !== s) return; }
+    S.dealer.push(draw()); render(); await sleep(300); if (S !== s) return;
   }
   for (const p of active()) if (handBJ(p.hands[0])) p.hands[0].done = true;
-  if (isBJ(S.dealer)) { reveal(); await sleep(700); return settle(); }
+  if (isBJ(S.dealer)) { reveal(); await sleep(700); if (S !== s) return; return settle(); }
   S.phase = 'play'; next();
 }
 function next() {
@@ -391,13 +466,13 @@ function dbl() {
   h.done = true; next();
 }
 async function split() {
-  const p = cur(), h = curH(), aces = h.cards[0].r === 'A';
+  const s = S, p = cur(), h = curH(), aces = h.cards[0].r === 'A';
   p.chips -= h.bet;
   const nh = { cards: [h.cards.pop()], bet: h.bet, done: false, res: null, split: true };
   h.split = true;
   p.hands.splice(S.turn.h + 1, 0, nh);
-  S.busy = true; render(); await sleep(250);
-  h.cards.push(draw()); render(); await sleep(300);
+  S.busy = true; render(); await sleep(250); if (S !== s) return;
+  h.cards.push(draw()); render(); await sleep(300); if (S !== s) return;
   nh.cards.push(draw());
   for (const x of [h, nh]) if (aces || value(x.cards) === 21) x.done = true;
   S.busy = false; next();
@@ -410,11 +485,12 @@ const canDbl = () => curH().cards.length === 2 && cur().chips >= curH().bet;
 
 function reveal() { S.hidden = false; fx.reveal = true; render(); }
 async function dealerPlay() {
+  const s = S;
   S.phase = 'dealer'; S.turn = null;
-  reveal(); await sleep(700);
+  reveal(); await sleep(700); if (S !== s) return;
   const needed = active().some(p => p.hands.some(h => value(h.cards) <= 21 && !handBJ(h)));
-  while (needed && value(S.dealer) < 17) { S.dealer.push(draw()); render(); await sleep(650); }
-  await sleep(250);
+  while (needed && value(S.dealer) < 17) { S.dealer.push(draw()); render(); await sleep(650); if (S !== s) return; }
+  await sleep(250); if (S !== s) return;
   settle();
 }
 function settle() {
@@ -439,7 +515,7 @@ function settle() {
 }
 function newRound() {
   for (const p of active()) { p.bet = Math.max(MIN, Math.min(p.base, p.chips)); p.hands = []; p.net = 0; }
-  S.dealer = []; S.phase = 'bet'; S.sel = 0; render();
+  S.dealer = []; S.phase = 'bet'; S.sel = mySeats()[0] ?? 0; render();
 }
 
 // Abrechnung: die Bank gehört allen, ihr Ergebnis wird gleichmäßig verteilt.
@@ -468,6 +544,7 @@ function ledger() {
   return { rows, bank: Math.round(bank * k), pays };
 }
 function ledgerHtml(L) {
+  if (!L) return '<p class="note">Noch keine Runde gespielt.</p>';
   const sign = v => (v > 0 ? '+' : '') + fmtU(v);
   return `<div class="ledger">
     ${[...L.rows].sort((a, b) => b.u - a.u).map(r => `<div class="lr"><span>${esc(r.name)}</span><span class="num ${r.u > 0 ? 'up' : r.u < 0 ? 'down' : ''}">${sign(r.u)}</span></div>`).join('')}
@@ -480,25 +557,269 @@ function renderLedger() {
   $('ledgersec').hidden = !S.buyin;
   if (!S.buyin) return;
   if (S.phase !== 'bet' && S.phase !== 'end') { box.innerHTML = '<p class="note">Die Abrechnung erscheint nach der Runde.</p>'; return; }
-  const L = ledger();
-  box.innerHTML = L ? ledgerHtml(L) : '<p class="note">Noch keine Runde gespielt.</p>';
+  box.innerHTML = ledgerHtml(ledger());
 }
 
 // Spielende
 function showFinal() {
   $('ftitle').textContent = `Endabrechnung nach ${S.rounds} ${S.rounds === 1 ? 'Runde' : 'Runden'}`;
   $('fbody').innerHTML = ledgerHtml(ledger());
+  const guest = NET.mode === 'guest';
+  $('fnew').hidden = guest;
+  $('fback').textContent = guest ? 'Schließen' : 'Weiterspielen';
   $('panel').hidden = true; $('menu').setAttribute('aria-expanded', false);
   $('final').hidden = false; $('scrim').hidden = false;
 }
-function hideFinal() { $('final').hidden = true; $('scrim').hidden = true; }
+function hideFinal() { $('final').hidden = true; $('scrim').hidden = $('tut').hidden; }
+
+// Kleine Hinweise am unteren Rand
+let toastT;
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.hidden = false;
+  clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 3200);
+}
+
+// Mehrspieler: Räume über PeerJS (WebRTC, direkt zwischen den Geräten).
+// Der Host führt das Spiel und verteilt nach jeder Änderung den Stand, die Gäste schicken nur ihre Züge.
+const PEER_LIB = ['https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js', 'https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js'];
+const ROOM_PREFIX = 'h2ku-blackjack-';
+const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const REMOTE_ACTS = ['add', 'clear', 'rebuy', 'hit', 'stand', 'dbl', 'split'];
+const NET = { mode: 'off', peer: null, host: null, code: '', seat: 0, seats: [], conns: new Map(), online: [], status: '', busy: false, timer: 0 };
+const myId = (() => { let id = store.get('bj-cid'); if (!id) { id = Math.random().toString(36).slice(2, 12); store.set('bj-cid', id); } return id; })();
+const myName = () => store.get('bj-name') || (load().players || [])[0]?.name || 'Spieler';
+const cleanName = (n, i) => String(n || '').trim().slice(0, 14) || 'Spieler ' + (i + 1);
+const online = () => NET.mode !== 'off';
+// Welche Plätze darf dieses Gerät bedienen? Lokal alle, als Gast den eigenen, als Host den eigenen und alle, deren Gast offline ist.
+function mine(i) {
+  if (NET.mode === 'off') return true;
+  if (NET.mode === 'guest') return i === NET.seat;
+  return i === 0 || !NET.online[i];
+}
+const mySeats = () => active().map((_, i) => i).filter(mine);
+
+let libP = null;
+function loadPeer() {
+  if (window.Peer) return Promise.resolve();
+  return libP || (libP = new Promise((ok, bad) => {
+    const at = i => {
+      if (i >= PEER_LIB.length) { libP = null; return bad(new Error('lib')); }
+      const s = document.createElement('script'); s.src = PEER_LIB[i]; s.async = true;
+      s.onload = () => ok(); s.onerror = () => { s.remove(); at(i + 1); };
+      document.head.appendChild(s);
+    };
+    at(0);
+  }));
+}
+function setStatus(msg, busy) { NET.status = msg; NET.busy = !!busy; renderMp(); }
+const newCode = () => Array.from({ length: 5 }, () => CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)]).join('');
+function blank(o) {
+  return { n: 1, skin: o.skin, ctrl: o.ctrl, buyin: o.buyin, players: Array.from({ length: MAXP }, (_, i) => mkP(i)), dealer: [], shoe: newShoe(), cid: 0,
+    phase: 'bet', turn: null, hidden: true, busy: false, rounds: 0, sel: 0 };
+}
+
+async function hostRoom() {
+  if (NET.busy || online()) return;
+  setStatus('Raum wird erstellt …', true);
+  try { await loadPeer(); } catch (e) { return setStatus('Die Verbindungsbibliothek konnte nicht geladen werden. Bist du online?'); }
+  const attempt = n => {
+    const code = newCode(), peer = new Peer(ROOM_PREFIX + code);
+    NET.peer = peer;
+    peer.on('open', () => {
+      if (NET.peer !== peer) return;
+      const name = myName();
+      S = blank(S); S.players[0].name = name;
+      seen = new Set(); fx = {};
+      Object.assign(NET, { mode: 'host', code, seat: 0, seats: ['host'], conns: new Map(), online: [true], status: '', busy: false });
+      hideFinal(); render(); renderNames(); renderPanel();
+      toast(`Raum ${code} ist offen`);
+    });
+    peer.on('connection', conn => hostConn(conn));
+    peer.on('disconnected', () => { if (NET.peer === peer && NET.mode === 'host' && !peer.destroyed) setTimeout(() => { try { peer.reconnect(); } catch (e) {} }, 1500); });
+    peer.on('error', err => {
+      if (NET.peer !== peer) return;
+      if (NET.mode === 'host') { if (err.type !== 'peer-unavailable') toast('Verbindungsproblem: ' + (err.type || 'unbekannt')); return; }
+      peer.destroy(); NET.peer = null;
+      if (err.type === 'unavailable-id' && n < 4) return attempt(n + 1);
+      setStatus('Der Raum konnte nicht erstellt werden. Prüfe deine Internetverbindung.');
+    });
+  };
+  attempt(0);
+}
+function syncOnline() { NET.online = NET.seats.map((cid, i) => i === 0 || NET.conns.has(cid)); }
+function sendAll(msg) { for (const c of NET.conns.values()) if (c.open) try { c.send(msg); } catch (e) {} }
+function hostConn(conn) {
+  conn.on('data', m => onGuestMsg(conn, m));
+  conn.on('close', () => dropConn(conn));
+  conn.on('error', () => dropConn(conn));
+}
+function onGuestMsg(conn, m) {
+  if (NET.mode !== 'host' || !m || typeof m !== 'object') return;
+  if (m.t === 'hello') {
+    const cid = String(m.cid || '').slice(0, 24);
+    if (!cid || cid === 'host') return;
+    let seat = NET.seats.indexOf(cid);
+    if (seat === -1) {
+      const why = S.phase !== 'bet' || started() ? 'Das Spiel läuft schon. Neue Spieler können erst nach dem Spielende dazukommen.'
+        : NET.seats.length >= MAXP ? 'Der Raum ist voll.' : '';
+      if (why) { try { conn.send({ t: 'deny', why }); } catch (e) {} setTimeout(() => conn.close(), 500); return; }
+      seat = NET.seats.length; NET.seats.push(cid);
+      // Standardnamen bekommen die Platznummer, doppelte Namen ebenfalls, damit man sich am Tisch auseinanderhält.
+      let name = cleanName(m.name, seat);
+      if (/^Spieler( \d+)?$/.test(name)) name = 'Spieler ' + (seat + 1);
+      else if (active().some(p => p.name === name)) name = name.slice(0, 11) + ' ' + (seat + 1);
+      S.players[seat] = { ...mkP(seat), name };
+      S.n = NET.seats.length;
+      toast(`${S.players[seat].name} ist dabei`);
+    } else {
+      const old = NET.conns.get(cid);
+      if (old && old !== conn) { NET.conns.delete(cid); try { old.close(); } catch (e) {} }
+      toast(`${S.players[seat].name} ist wieder da`);
+    }
+    conn._cid = cid; NET.conns.set(cid, conn);
+    conn.send({ t: 'welcome', seat, code: NET.code });
+    syncOnline(); if (S.phase === 'bet' && !mine(S.sel)) S.sel = 0;
+    render(); return;
+  }
+  const seat = NET.seats.indexOf(conn._cid);
+  if (seat < 1 || NET.conns.get(conn._cid) !== conn) return;
+  if (m.t === 'name') { S.players[seat].name = cleanName(m.name, seat); render(); }
+  else if (m.t === 'act' && REMOTE_ACTS.includes(m.act)) doAct(m.act, +m.a || 0, seat);
+}
+function dropConn(conn) {
+  const cid = conn._cid;
+  if (NET.mode !== 'host' || !cid || NET.conns.get(cid) !== conn) return;
+  NET.conns.delete(cid);
+  const seat = NET.seats.indexOf(cid), name = S.players[seat]?.name;
+  if (seat < 1) return;
+  if (S.phase === 'bet' && !started()) { removeSeat(seat); toast(`${name} hat den Raum verlassen`); }
+  else toast(`${name} ist offline, du spielst den Platz weiter`);
+  syncOnline(); if (S.phase === 'bet' && !mine(S.sel)) S.sel = 0;
+  render();
+}
+function removeSeat(k) {
+  NET.seats.splice(k, 1); S.players.splice(k, 1); S.players.push(mkP(MAXP - 1));
+  S.n = NET.seats.length; S.sel = 0;
+  NET.seats.forEach((cid, i) => { const c = NET.conns.get(cid); if (i && c && c.open) c.send({ t: 'seat', seat: i }); });
+}
+function broadcast() {
+  if (NET.mode !== 'host' || !NET.conns.size) return;
+  const { shoe, skin, ctrl, sel, ...rest } = S;
+  sendAll({ t: 'state', S: rest, online: NET.online, fx });
+}
+
+async function joinRoom(raw) {
+  const code = String(raw || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (NET.busy || online()) return;
+  if (code.length < 4) return setStatus('Bitte gib den Raumcode ein, den der Host dir zeigt.');
+  setStatus(`Verbinde mit Raum ${code} …`, true);
+  try { await loadPeer(); } catch (e) { return setStatus('Die Verbindungsbibliothek konnte nicht geladen werden. Bist du online?'); }
+  const peer = new Peer();
+  NET.peer = peer;
+  const fail = msg => { if (NET.peer !== peer) return; if (NET.mode === 'guest') return leaveRoom(msg); NET.peer = null; clearTimeout(NET.timer); try { peer.destroy(); } catch (e) {} setStatus(msg); toast(msg); setUrl(''); };
+  NET.timer = setTimeout(() => fail(`Raum ${code} antwortet nicht.`), 15000);
+  peer.on('open', () => {
+    if (NET.peer !== peer) return;
+    const conn = peer.connect(ROOM_PREFIX + code, { reliable: true, serialization: 'json' });
+    conn.on('open', () => conn.send({ t: 'hello', cid: myId, name: myName() }));
+    conn.on('data', m => onHostMsg(peer, conn, code, m));
+    conn.on('close', () => fail('Die Verbindung zum Raum ist getrennt.'));
+    conn.on('error', () => fail('Die Verbindung zum Raum ist getrennt.'));
+  });
+  peer.on('error', err => fail(err.type === 'peer-unavailable' ? `Raum ${code} gibt es nicht (mehr).` : 'Die Verbindung hat nicht geklappt.'));
+}
+function onHostMsg(peer, conn, code, m) {
+  if (NET.peer !== peer || !m || typeof m !== 'object') return;
+  if (m.t === 'welcome') {
+    clearTimeout(NET.timer);
+    Object.assign(NET, { mode: 'guest', host: conn, code, seat: +m.seat || 0, status: '', busy: false });
+    seen = new Set(); fx = {};
+    setUrl(code); hideFinal(); renderPanel(); renderNames();
+    toast(`Du bist in Raum ${code}`);
+  } else if (m.t === 'deny') {
+    clearTimeout(NET.timer); NET.peer = null; try { peer.destroy(); } catch (e) {}
+    setStatus(m.why || 'Beitreten nicht möglich.'); toast(m.why || 'Beitreten nicht möglich.'); setUrl('');
+  } else if (NET.mode !== 'guest') return;
+  else if (m.t === 'seat') { NET.seat = +m.seat || 0; S.sel = NET.seat; render(); }
+  else if (m.t === 'state' && m.S) {
+    const panelOpen = !$('panel').hidden, nOld = S.n;
+    S = { ...m.S, skin: S.skin, ctrl: S.ctrl, sel: NET.seat, shoe: [] };
+    NET.online = m.online || [];
+    fx = m.fx || {};
+    render();
+    if (panelOpen && nOld !== S.n) renderNames();
+  } else if (m.t === 'final') showFinal();
+  else if (m.t === 'hidefinal') hideFinal();
+  else if (m.t === 'closed') leaveRoom('Der Host hat den Raum geschlossen.');
+}
+function leaveRoom(msg) {
+  const wasHost = NET.mode === 'host', peer = NET.peer;
+  if (wasHost) sendAll({ t: 'closed' });
+  clearTimeout(NET.timer);
+  Object.assign(NET, { mode: 'off', peer: null, host: null, code: '', seat: 0, seats: [], conns: new Map(), online: [], status: '', busy: false });
+  if (peer) setTimeout(() => { try { peer.destroy(); } catch (e) {} }, wasHost ? 400 : 0);
+  setUrl('');
+  if (msg) toast(msg);
+  hideFinal();
+  start({});
+  if (!$('panel').hidden) { renderNames(); renderPanel(); }
+}
+function setUrl(code) {
+  try {
+    const u = new URL(location.href);
+    if (code) u.searchParams.set('raum', code); else u.searchParams.delete('raum');
+    history.replaceState(null, '', u);
+  } catch (e) {}
+}
+function shareRoom() {
+  const u = new URL(location.href); u.search = ''; u.hash = ''; u.searchParams.set('raum', NET.code);
+  const link = u.toString();
+  if (navigator.share) navigator.share({ title: 'Blackjack', text: `Komm an meinen Blackjack-Tisch, Raumcode ${NET.code}`, url: link }).catch(() => {});
+  else if (navigator.clipboard) navigator.clipboard.writeText(link).then(() => toast('Link kopiert'), () => toast(link));
+  else toast(link);
+}
+function mpAction(a) {
+  if (a === 'host') hostRoom();
+  else if (a === 'join') joinRoom($('mpcode') && $('mpcode').value);
+  else if (a === 'share') shareRoom();
+  else if (a === 'leave') leaveRoom(NET.mode === 'host' ? 'Raum geschlossen' : 'Du hast den Raum verlassen');
+}
+
+let mpKey = '';
+function renderMp() {
+  const box = $('mp');
+  const plist = () => active().map((p, i) => {
+    const on = NET.online[i] !== false, me = NET.mode === 'guest' ? i === NET.seat : i === 0;
+    return `<div><i class="dot${on ? '' : ' off'}"></i><span>${esc(p.name)}</span><em>${me ? 'du · ' : ''}${i === 0 ? 'Host' : on ? 'Platz ' + (i + 1) : 'offline'}</em></div>`;
+  }).join('');
+  let html;
+  if (NET.mode === 'off') {
+    html = `<p class="note">Spielt zusammen, jeder am eigenen Gerät. Eine Person erstellt einen Raum, die anderen treten mit dem Code bei.</p>
+      <div class="mprow"><button class="pill main" data-mp="host"${NET.busy ? ' disabled' : ''}>Raum erstellen</button></div>
+      <div class="mprow"><input id="mpcode" maxlength="6" placeholder="Code" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Raumcode"><button class="pill" data-mp="join"${NET.busy ? ' disabled' : ''}>Beitreten</button></div>
+      ${NET.status ? `<p class="note">${esc(NET.status)}</p>` : ''}`;
+  } else {
+    const host = NET.mode === 'host';
+    html = `<div class="room"><span class="note">Raumcode</span><b class="code num">${esc(NET.code)}</b></div>
+      <div class="plist">${plist()}</div>
+      <div class="mprow">${host ? '<button class="pill main" data-mp="share">Einladen</button>' : ''}<button class="pill" data-mp="leave">${host ? 'Raum schließen' : 'Raum verlassen'}</button></div>
+      <p class="note">${host
+        ? (started() || S.phase !== 'bet' ? 'Das Spiel läuft. Wer die Verbindung verliert, kommt mit demselben Code zurück, bis dahin spielst du seinen Platz.' : `Bis zu ${MAXP} Spieler können beitreten, solange die erste Runde noch nicht begonnen hat. Du teilst aus.`)
+        : 'Du setzt und spielst deinen Platz, der Host teilt aus.'}</p>`;
+  }
+  // Nur neu zeichnen, wenn sich etwas geändert hat, damit das Codefeld beim Tippen nicht verloren geht.
+  if (html === mpKey && box.innerHTML) return;
+  const keep = $('mpcode') ? $('mpcode').value : '';
+  mpKey = html; box.innerHTML = html;
+  if ($('mpcode')) $('mpcode').value = keep;
+}
 
 // Darstellung
 function cardHtml(c, hide) {
   const red = c.su === '♥' || c.su === '♦';
   const front = hide ? '<div class="face front"></div>'
     : `<div class="face front${red ? ' red' : ''}"><span class="r">${c.r}</span><span class="s">${c.su}︎</span></div>`;
-  return `<div class="card" data-id="${c.id}"><div class="in${hide ? ' flip' : ''}">${front}<div class="face backf"></div></div></div>`;
+  return `<div class="card"${c.id != null ? ` data-id="${c.id}"` : ''}><div class="in${hide ? ' flip' : ''}">${front}<div class="face backf"></div></div></div>`;
 }
 const chipCls = v => v >= 500 ? 'c500' : v >= 100 ? 'c100' : v >= 50 ? 'c50' : v >= 25 ? 'c25' : 'c10';
 const chipHtml = v => `<div class="chip ${chipCls(v)}"><span>${v}</span></div>`;
@@ -506,30 +827,44 @@ const chipHtml = v => `<div class="chip ${chipCls(v)}"><span>${v}</span></div>`;
 const seatPos = (i, n) => { const t = (i + .5) / n; return { x: 15 + 70 * t, y: 120 + 64 * Math.sin(Math.PI * t) }; };
 
 function renderPanel() {
+  const guest = NET.mode === 'guest';
+  $('pseg').hidden = online();
   document.querySelectorAll('#pseg button').forEach(b => { b.setAttribute('aria-pressed', +b.dataset.n === S.n); b.disabled = S.phase !== 'bet' || started(); });
-  document.querySelectorAll('#bseg button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.b === S.buyin));
+  document.querySelectorAll('#bseg button').forEach(b => { b.setAttribute('aria-pressed', +b.dataset.b === S.buyin); b.disabled = guest; });
   document.querySelectorAll('#cseg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.c === S.ctrl));
   document.querySelectorAll('.sw').forEach(b => b.setAttribute('aria-pressed', b.dataset.s === S.skin));
   $('skinname').textContent = SKINS[S.skin];
   $('cnote').textContent = S.ctrl === 'gest'
     ? 'Auf den Tisch tippen gibt eine Karte, zur Seite wischen heißt Stehen. Teilen und Doppeln bleiben als Knöpfe.'
     : 'Große Kugel für Karte, daneben Stehen, darunter Teilen und Doppeln.';
-  $('plock').hidden = !started();
+  $('plock').hidden = !online() && !started();
+  $('plock').textContent = online()
+    ? 'Im Raum hat jedes Gerät einen eigenen Platz. Hier änderst du nur deinen Namen.'
+    : 'Die Spieleranzahl steht fest, bis das Spiel beendet ist. Alle spielen bis zum Schluss mit.';
+  $('end').hidden = guest;
   $('end').disabled = !started() || (S.phase !== 'bet' && S.phase !== 'end');
   $('end').textContent = started() && S.phase !== 'bet' && S.phase !== 'end' ? 'Spiel beenden (nach der Runde)' : 'Spiel beenden';
-  $('rate').textContent = S.buyin
+  $('rate').textContent = (S.buyin
     ? `Jeder kauft sich für ${eur(S.buyin)} ein und bekommt ${PACK} Chips. Die Bank gehört allen: was sie gewinnt oder verliert, wird gleichmäßig aufgeteilt. So geht das Geld nur zwischen euch hin und her.`
-    : 'Nur um Chips, ohne Abrechnung.';
+    : 'Nur um Chips, ohne Abrechnung.') + (guest ? ' Der Host legt das fest.' : '');
   renderLedger();
+  renderMp();
 }
 function renderNames() {
-  $('names').innerHTML = active().map((p, i) =>
+  const own = NET.mode === 'guest' ? NET.seat : 0;
+  $('names').innerHTML = active().map((p, i) => online() && i !== own ? '' :
     `<input id="name-${i}" data-i="${i}" maxlength="14" value="${esc(p.name)}" aria-label="Name Spieler ${i + 1}">`).join('');
 }
+let lastSkin;
 function render() {
   document.body.dataset.skin = S.skin;
+  if (lastSkin !== S.skin) {
+    lastSkin = S.skin;
+    const m = document.querySelector('meta[name="theme-color"]'), bg = getComputedStyle(document.body).getPropertyValue('--bg').trim();
+    if (m && bg) m.content = bg;
+  }
   if (!$('panel').hidden) renderPanel();
-  $('info').textContent = `Runde ${S.rounds + (S.phase === 'end' ? 0 : 1)}` + (S.buyin ? ` · ${eur(S.buyin)} pro Kopf` : '');
+  $('info').textContent = (online() ? `Raum ${NET.code} · ` : '') + `Runde ${S.rounds + (S.phase === 'end' ? 0 : 1)}` + (S.buyin ? ` · ${eur(S.buyin)}${online() ? '' : ' pro Kopf'}` : '');
 
   // Bank
   $('dhand').innerHTML = S.dealer.map((c, i) => cardHtml(c, i === 1 && S.hidden)).join('');
@@ -538,6 +873,7 @@ function render() {
 
   // Plätze
   const bet = S.phase === 'bet';
+  if (bet && !mine(S.sel)) S.sel = mySeats()[0] ?? 0;
   $('seats').innerHTML = active().map((p, i) => {
     const { x, y } = seatPos(i, S.n);
     const on = bet ? S.sel === i : S.turn && S.turn.p === i;
@@ -550,56 +886,68 @@ function render() {
     if (bet) line = `<span class="num">${p.chips}</span>`;
     else if (S.phase === 'end') line = `<span class="res num ${p.net > 0 ? 'w' : p.net < 0 ? 'l' : 'p'}">${p.net > 0 ? '+' : ''}${p.net}</span>`;
     else line = `<span class="v num">${p.hands.map(h => h.cards.length ? value(h.cards) : '').join(' / ')}</span>`;
-    return `<div class="spot${on ? ' on' : ''}" data-seat="${i}" style="left:${x}%;top:${y}px">
+    const away = online() && NET.online[i] === false;
+    const tag = away ? '<span class="tag">offline</span>' : NET.mode === 'guest' && i === NET.seat ? '<span class="tag">du</span>' : '';
+    return `<div class="spot${on ? ' on' : ''}${away ? ' away' : ''}" data-seat="${i}" style="left:${x}%;top:${y}px">
       <div class="hands${p.hands.length > 1 ? ' many' : ''}">${hands}</div>
       <div class="ring">${stake ? chipHtml(stake) : ''}</div>
-      <div class="who"><b>${esc(p.name)}</b>${line}</div>
+      <div class="who"><b>${esc(p.name)}</b>${tag}${line}</div>
     </div>`;
   }).join('');
 
   // Zeile unter dem Tisch und Steuerung
+  const guest = NET.mode === 'guest';
   let turn = '', ctrl = '', center = false;
   if (bet) {
-    const p = active()[S.sel];
-    turn = (S.n > 1 ? '<button class="nav" data-act="prev" aria-label="Vorheriger Spieler">‹</button>' : '')
+    const p = active()[S.sel], nav = mySeats().length > 1;
+    turn = (nav ? '<button class="nav" data-act="prev" aria-label="Vorheriger Spieler">‹</button>' : '')
       + `<span>Einsatz <b>${esc(p.name)}</b> · <span class="num">${p.chips < MIN ? 0 : p.bet}</span></span>`
-      + (S.n > 1 ? '<button class="nav" data-act="nextp" aria-label="Nächster Spieler">›</button>' : '');
+      + (nav ? '<button class="nav" data-act="nextp" aria-label="Nächster Spieler">›</button>' : '');
     const ok = active().every(q => q.bet >= MIN && q.bet <= q.chips);
+    const base = p._fresh ? 0 : p.bet;
     const tray = p.chips < MIN
       ? `<button class="pill" data-act="rebuy">Nachkaufen${S.buyin ? ' · ' + eur(S.buyin) : ''}</button>`
-      : `<div class="tray">${CHIPS.map(a => `<button class="chip lg ${chipCls(a)}" data-act="add" data-a="${a}" aria-label="${a} setzen"${p.bet + a > p.chips ? ' disabled' : ''}><span>${a}</span></button>`).join('')}</div>
+      : `<div class="tray">${CHIPS.map(a => `<button class="chip lg ${chipCls(a)}" data-act="add" data-a="${a}" aria-label="${a} setzen"${base + a > p.chips ? ' disabled' : ''}><span>${a}</span></button>`).join('')}</div>
          <div class="small"><button data-act="clear">Mindesteinsatz</button></div>`;
-    ctrl = `<div class="side">${tray}</div><button class="ball" data-act="deal"${ok ? '' : ' disabled'}>Austeilen</button>`;
+    ctrl = `<div class="side">${tray}</div>` + (guest
+      ? '<button class="ball" disabled aria-label="Der Host teilt aus">Warten</button>'
+      : `<button class="ball" data-act="deal"${ok ? '' : ' disabled'}>Austeilen</button>`);
   } else if (S.phase === 'deal') {
     turn = 'Karten werden ausgeteilt';
   } else if (S.phase === 'play') {
-    const p = cur();
-    turn = `<span><b>${esc(p.name)}</b> ist dran${p.hands.length > 1 ? ` · Hand ${S.turn.h + 1} von ${p.hands.length}` : ''}</span>`;
-    const sp = canSplit() && !S.busy ? '' : ' disabled', db = canDbl() && !S.busy ? '' : ' disabled', off = S.busy ? ' disabled' : '';
-    if (S.ctrl === 'gest') {
-      center = true;
-      ctrl = `<div class="pills"><button class="pill" data-act="split"${sp}>Teilen</button><button class="pill" data-act="dbl"${db}>Doppeln</button></div>`;
-    } else {
-      ctrl = `<div class="side"><button class="big" data-act="stand"${off}>Stehen</button>
-        <div class="small"><button data-act="split"${sp}>Teilen</button><button data-act="dbl"${db}>Doppeln</button></div></div>
-        <button class="ball" data-act="hit"${off}>Karte</button>`;
+    const p = cur(), me = mine(S.turn.p);
+    const who = guest && me ? 'Du bist' : `<b>${esc(p.name)}</b> ist`;
+    turn = `<span>${who} dran${p.hands.length > 1 ? ` · Hand ${S.turn.h + 1} von ${p.hands.length}` : ''}</span>`;
+    if (me) {
+      const sp = canSplit() && !S.busy ? '' : ' disabled', db = canDbl() && !S.busy ? '' : ' disabled', off = S.busy ? ' disabled' : '';
+      if (S.ctrl === 'gest') {
+        center = true;
+        ctrl = `<div class="pills"><button class="pill" data-act="split"${sp}>Teilen</button><button class="pill" data-act="dbl"${db}>Doppeln</button></div>`;
+      } else {
+        ctrl = `<div class="side"><button class="big" data-act="stand"${off}>Stehen</button>
+          <div class="small"><button data-act="split"${sp}>Teilen</button><button data-act="dbl"${db}>Doppeln</button></div></div>
+          <button class="ball" data-act="hit"${off}>Karte</button>`;
+      }
     }
   } else if (S.phase === 'dealer') {
     turn = 'Bank zieht';
   } else {
     const v = value(S.dealer);
     turn = `<span>Bank hat <b>${v > 21 ? 'überkauft' : v}</b></span>`;
-    ctrl = `<div class="side"></div><button class="ball" data-act="new">Weiter</button>`;
+    ctrl = `<div class="side"></div>` + (guest
+      ? '<button class="ball" disabled aria-label="Der Host startet die nächste Runde">Warten</button>'
+      : '<button class="ball" data-act="new">Weiter</button>');
   }
   $('turn').innerHTML = turn;
   $('ctrl').innerHTML = ctrl;
   $('ctrl').classList.toggle('center', center);
+  broadcast();
   animate();
 }
 
 // Karten fliegen verdeckt aus dem Schuh und drehen sich beim Ankommen um
 function animate() {
-  const cards = document.querySelectorAll('.card[data-id]');
+  const cards = document.querySelectorAll('#table .card[data-id]');
   if (reduce || !Element.prototype.animate) { cards.forEach(c => seen.add(c.dataset.id)); fx = {}; return; }
   const d = $('deck').getBoundingClientRect();
   cards.forEach(c => {
@@ -627,16 +975,56 @@ function animate() {
     h && h.animate([{ transform: 'none' }, { transform: 'translateX(-6px) rotate(-2deg)' }, { transform: 'translateX(6px) rotate(2deg)' },
       { transform: 'translateX(-3px)' }, { transform: 'none' }], { duration: 420, delay: 250 });
   }
-  if (fx.chip) {
-    const ring = document.querySelector(`[data-seat="${S.sel}"] .chip`);
+  if (fx.chip != null) {
+    const ring = document.querySelector(`[data-seat="${fx.chip}"] .chip`);
     ring && ring.animate([{ transform: 'translateY(60px) scale(1.4)', opacity: .3 }, { transform: 'none', opacity: 1 }], { duration: 260, easing: 'cubic-bezier(.25,.8,.3,1)' });
   }
   fx = {};
 }
 
+// Züge. doAct prüft alles selbst, weil im Raum auch Gäste Züge schicken.
+function doAct(act, a, seat) {
+  const ps = active(), p = ps[seat];
+  if (!p) return;
+  if (S.phase === 'bet') {
+    if (act === 'add') {
+      const base = p._fresh ? 0 : p.bet;
+      if (!CHIPS.includes(a) || p.chips < MIN || base + a > p.chips) return;
+      p.bet = base + a; p._fresh = false; fx.chip = seat;
+    } else if (act === 'clear') { p.bet = MIN; p._fresh = true; }
+    else if (act === 'rebuy') { if (p.chips >= MIN) return; p.chips += PACK; p.bought += PACK; p.bet = Math.min(p.base || 50, p.chips); save(); }
+    else if (act === 'deal') {
+      if (!ps.every(q => q.bet >= MIN && q.bet <= q.chips)) return;
+      ps.forEach(q => q._fresh = false); return deal();
+    } else return;
+    return render();
+  }
+  if (S.phase === 'play' && !S.busy && S.turn && S.turn.p === seat) {
+    if (act === 'hit') return hit();
+    if (act === 'stand') return stand();
+    if (act === 'dbl' && canDbl()) return dbl();
+    if (act === 'split' && canSplit()) return split();
+  }
+  if (S.phase === 'end' && act === 'new') return newRound();
+}
+function act(name, a) {
+  if (name === 'prev' || name === 'nextp') {
+    const ms = mySeats(), k = ms.indexOf(S.sel);
+    S.sel = ms[(k + (name === 'prev' ? ms.length - 1 : 1)) % ms.length] ?? 0;
+    return render();
+  }
+  const seat = S.phase === 'bet' ? S.sel : S.turn ? S.turn.p : S.sel;
+  if (NET.mode === 'guest') {
+    if (!REMOTE_ACTS.includes(name) || !mine(seat)) return;
+    if (NET.host && NET.host.open) NET.host.send({ t: 'act', act: name, a });
+    return;
+  }
+  doAct(name, a, seat);
+}
+
 // Gesten überall außer auf Knöpfen und im Menü: Tippen = Karte, Wischen = Stehen
 let touch = null;
-const noGesture = t => !t.closest || t.closest('button, input, header, .panel, .final, .scrim');
+const noGesture = t => !t.closest || t.closest('button, input, header, .panel, .final, .scrim, .toast');
 document.addEventListener('pointerdown', e => { touch = noGesture(e.target) ? null : { x: e.clientX, y: e.clientY, t: Date.now() }; });
 document.addEventListener('pointerup', e => {
   if (!touch) return;
@@ -644,19 +1032,93 @@ document.addEventListener('pointerup', e => {
   touch = null;
   if (S.phase === 'bet') {
     const seat = e.target.closest && e.target.closest('[data-seat]');
-    if (seat && Math.abs(dx) < 10 && Math.abs(dy) < 10) { S.sel = +seat.dataset.seat; buzz(); render(); }
+    if (seat && Math.abs(dx) < 10 && Math.abs(dy) < 10 && mine(+seat.dataset.seat)) { S.sel = +seat.dataset.seat; buzz(); render(); }
     return;
   }
-  if (S.ctrl !== 'gest' || S.phase !== 'play' || S.busy) return;
-  if (Math.abs(dx) > 50 && Math.abs(dy) < 50) { buzz(); stand(); }
+  if (S.ctrl !== 'gest' || S.phase !== 'play' || S.busy || !S.turn || !mine(S.turn.p)) return;
+  if (Math.abs(dx) > 50 && Math.abs(dy) < 50) { buzz(); act('stand'); }
   else if (Math.abs(dx) < 10 && Math.abs(dy) < 10 && dt < 500) {
     const dot = document.createElement('span');
     dot.className = 'ripple'; dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
     document.body.appendChild(dot); setTimeout(() => dot.remove(), 500);
-    buzz(); hit();
+    buzz(); act('hit');
   }
 });
 document.addEventListener('pointercancel', () => { touch = null; });
+
+// Tutorial: Blackjack in Kürze und wie die App funktioniert
+const ex = (cards, lbl) => `<div><div class="hand">${cards.map(([r, su]) => cardHtml({ r, su })).join('')}</div>${lbl ? `<div class="lbl">${lbl}</div>` : ''}</div>`;
+const TUT = [
+  { t: 'Willkommen am Tisch', b: () => `<div class="ex">${ex([['A', '♠'], ['K', '♥']], 'Ass und König: Blackjack')}</div>
+    <p>In ein paar kurzen Schritten lernst du, wie Blackjack funktioniert und wie du diese App bedienst.</p>
+    <p>Du kannst das Tutorial jederzeit über das <b>?</b> oben rechts wieder öffnen.</p>` },
+  { t: 'Das Ziel', b: () => `<p>Ihr spielt <b>gegen die Bank</b>, nicht gegeneinander. Wer mit seinen Karten näher an <b>21</b> kommt als die Bank, gewinnt.</p>
+    <p>Aber Vorsicht: Wer über 21 kommt, hat <b>überkauft</b> und verliert sofort, egal was die Bank danach macht.</p>
+    <div class="ex">${ex([['10', '♣'], ['9', '♦']], '19: gut')}${ex([['K', '♠'], ['6', '♥'], ['8', '♣']], '24: überkauft')}</div>` },
+  { t: 'Was die Karten zählen', b: () => `<ul><li><b>2 bis 10</b> zählen ihren Wert.</li><li><b>Bube, Dame, König</b> zählen 10.</li>
+    <li>Das <b>Ass</b> zählt 11, oder 1, wenn du sonst über 21 kämst.</li></ul>
+    <div class="ex">${ex([['A', '♥'], ['6', '♠']], '7 oder 17')}${ex([['A', '♥'], ['6', '♠'], ['9', '♦']], '16')}</div>
+    <p>Die App rechnet das automatisch aus und zeigt den Wert unter jeder Hand.</p>` },
+  { t: 'So läuft eine Runde', b: () => `<ul><li>Alle setzen ihren <b>Einsatz</b>.</li><li>Jeder bekommt zwei offene Karten, die Bank eine offene und eine <b>verdeckte</b>.</li>
+    <li>Reihum entscheidet jeder, ob er weitere Karten will.</li><li>Dann deckt die Bank auf und zieht nach fester Regel: <b>bis 16 ziehen, ab 17 stehen</b>.</li>
+    <li>Zum Schluss wird abgerechnet.</li></ul>` },
+  { t: 'Deine Möglichkeiten', b: () => `<ul><li><b>Karte</b>: du nimmst eine weitere Karte.</li><li><b>Stehen</b>: du bist zufrieden, der Nächste ist dran.</li>
+    <li><b>Doppeln</b>: mit den ersten zwei Karten verdoppelst du den Einsatz und bekommst genau noch eine Karte.</li>
+    <li><b>Teilen</b>: zwei gleichwertige Karten werden zu zwei Händen mit je eigenem Einsatz, bis zu vier Hände. Geteilte Asse bekommen nur je eine Karte.</li></ul>
+    <div class="ex">${ex([['8', '♠'], ['8', '♦']], 'kann geteilt werden')}</div>` },
+  { t: 'Was du gewinnst', b: () => `<ul><li><b>Sieg</b>: du bekommst deinen Einsatz doppelt zurück (1 zu 1).</li>
+    <li><b>Blackjack</b>, also Ass und Zehnerkarte als erste zwei Karten, zahlt <b>3 zu 2</b>.</li>
+    <li><b>Gleichstand</b>: du bekommst deinen Einsatz zurück.</li><li>Überkauft sich die Bank, gewinnen alle, die noch im Spiel sind.</li></ul>
+    <div class="ex"><div class="hand">${chipHtml(50)}</div><div class="lbl">Blackjack mit 50 Einsatz bringt 75 Gewinn</div></div>` },
+  { t: 'Ein paar Faustregeln', b: () => `<p>Die Bank muss ziehen, du nicht. Das ist dein Vorteil.</p>
+    <ul><li>Ab <b>17</b> bleibst du stehen.</li><li>Mit <b>12 bis 16</b> stehen, wenn die Bank 2 bis 6 zeigt, sonst ziehen.</li>
+    <li>Mit <b>10 oder 11</b> lohnt sich Doppeln, wenn die Bank schwächer liegt.</li><li><b>Asse und Achten</b> immer teilen, Zehner nie.</li></ul>` },
+  { t: 'Setzen in der App', b: () => `<div class="ex"><div class="tray">${CHIPS.map(chipHtml).join('')}</div></div>
+    <ul><li>Tippe auf die <b>Jetons</b>, um deinen Einsatz zu erhöhen. <b>Mindesteinsatz</b> setzt ihn auf 10 zurück.</li>
+    <li>Spielen mehrere an einem Gerät, wechselst du mit <b>‹ ›</b> oder durch Antippen eines Platzes am Tisch.</li>
+    <li>Sind alle bereit, tippst du auf <b>Austeilen</b>. Wer keine Chips mehr hat, kann <b>nachkaufen</b>.</li></ul>` },
+  { t: 'Karte oder Geste', b: () => `<p>Im Menü unter <b>Steuerung</b> wählst du, wie du spielst:</p>
+    <ul><li><b>Knöpfe</b>: die große Kugel gibt eine Karte, daneben stehen Stehen, Teilen und Doppeln.</li>
+    <li><b>Gesten</b>: auf den Tisch tippen gibt eine Karte, zur Seite wischen heißt Stehen.</li></ul>` },
+  { t: 'Das Menü', b: () => `<p>Tippe oben links auf <b>Blackjack</b>, um das Menü zu öffnen. Dort findest du:</p>
+    <ul><li><b>Spieler</b>: wie viele an einem Gerät spielen, und ihre Namen.</li><li><b>Farben</b>: sechs Designs, darunter Neon.</li>
+    <li><b>Um Geld spielen</b>: jeder kauft sich für einen festen Betrag ein. Die Bank gehört allen, am Ende zeigt die Abrechnung, wer wem wie viel zahlt.</li>
+    <li><b>Spiel beenden</b> zeigt die Endabrechnung.</li></ul>` },
+  { t: 'Zusammen in einem Raum', b: () => `<p>Mit <b>Mehrspieler</b> im Menü spielt jeder am eigenen Handy am selben Tisch.</p>
+    <ul><li>Eine Person tippt auf <b>Raum erstellen</b> und bekommt einen Code. Mit <b>Einladen</b> teilt sie einen Link.</li>
+    <li>Die anderen geben den Code ein und tippen auf <b>Beitreten</b>, oder öffnen einfach den Link.</li>
+    <li>Jeder setzt und spielt seinen eigenen Platz, der Host teilt aus.</li>
+    <li>Geht die Verbindung verloren, kommst du mit demselben Code zurück auf deinen Platz.</li></ul>` },
+  { t: 'Viel Glück!', b: () => `<div class="ex">${ex([['A', '♦'], ['J', '♣']])}</div><p>Das war's. Setz deinen Einsatz und tippe auf <b>Austeilen</b>.</p>` }
+];
+let tutI = 0;
+function showTut(i) {
+  tutI = Math.max(0, Math.min(TUT.length - 1, i));
+  const s = TUT[tutI];
+  $('tstep').textContent = `${tutI + 1} / ${TUT.length}`;
+  $('ttitle').textContent = s.t;
+  $('tbody').innerHTML = s.b();
+  $('tdots').innerHTML = TUT.map((_, k) => `<i${k === tutI ? ' class="on"' : ''}></i>`).join('');
+  $('tprev').disabled = tutI === 0;
+  $('tnext').textContent = tutI === TUT.length - 1 ? "Los geht's" : 'Weiter';
+  $('tskip').hidden = tutI === TUT.length - 1;
+}
+function openTut() {
+  $('panel').hidden = true; $('menu').setAttribute('aria-expanded', false);
+  $('tut').hidden = false; $('scrim').hidden = false; showTut(0); $('tnext').focus();
+}
+function closeTut() { $('tut').hidden = true; $('scrim').hidden = $('final').hidden; store.set('bj-tut', '1'); }
+$('help').addEventListener('click', openTut);
+$('tutopen').addEventListener('click', openTut);
+$('tprev').addEventListener('click', () => showTut(tutI - 1));
+$('tnext').addEventListener('click', () => tutI === TUT.length - 1 ? closeTut() : showTut(tutI + 1));
+$('tskip').addEventListener('click', closeTut);
+document.addEventListener('keydown', e => {
+  if ($('tut').hidden) return;
+  if (e.key === 'Escape') closeTut();
+  else if (e.key === 'ArrowRight') showTut(tutI + 1);
+  else if (e.key === 'ArrowLeft') showTut(tutI - 1);
+});
 
 // Menü
 function setMenu(open) {
@@ -665,42 +1127,48 @@ function setMenu(open) {
   if (open) { renderNames(); renderPanel(); }
 }
 $('menu').addEventListener('click', () => setMenu($('panel').hidden));
-$('scrim').addEventListener('click', () => { if ($('final').hidden) setMenu(false); });
+$('scrim').addEventListener('click', () => { if ($('final').hidden && $('tut').hidden) setMenu(false); });
 $('names').addEventListener('input', e => {
-  const p = S.players[+e.target.dataset.i]; if (!p) return;
-  p.name = e.target.value.trim() || 'Spieler ' + (+e.target.dataset.i + 1);
+  const i = +e.target.dataset.i, p = S.players[i]; if (!p) return;
+  const name = cleanName(e.target.value, i);
+  if (online()) {
+    store.set('bj-name', name);
+    p.name = name;
+    if (NET.mode === 'guest' && NET.host && NET.host.open) NET.host.send({ t: 'name', name });
+    return render();
+  }
+  p.name = name;
   save(); render();
 });
+$('mp').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'mpcode') joinRoom(e.target.value); });
 
 // Eingaben
 document.addEventListener('click', e => {
-  const b = e.target.closest('button'); if (!b || b.disabled || ['menu', 'end', 'fback', 'fnew'].includes(b.id)) return;
-  const act = b.dataset.act, p = S.phase === 'bet' ? active()[S.sel] : null;
+  const b = e.target.closest('button'); if (!b || b.disabled || b.id) return;
   if (b.dataset.s) { S.skin = b.dataset.s; save(); render(); return; }
   if (b.dataset.c) { S.ctrl = b.dataset.c; save(); render(); return; }
-  if (b.dataset.n) { S.n = +b.dataset.n; S.sel = 0; save(); renderNames(); render(); return; }
-  if (b.dataset.b) { S.buyin = +b.dataset.b; save(); render(); return; }
-  if (act) buzz();
-  if (act === 'add') { p.bet = (p._fresh ? 0 : p.bet) + +b.dataset.a; p._fresh = false; fx.chip = true; }
-  else if (act === 'clear') { p.bet = MIN; p._fresh = true; }
-  else if (act === 'prev') S.sel = (S.sel + S.n - 1) % S.n;
-  else if (act === 'nextp') S.sel = (S.sel + 1) % S.n;
-  else if (act === 'rebuy') { p.chips += PACK; p.bought += PACK; p.bet = Math.min(p.base || 50, p.chips); save(); }
-  else if (act === 'deal') { active().forEach(q => q._fresh = false); return deal(); }
-  else if (act === 'hit') return hit();
-  else if (act === 'stand') return stand();
-  else if (act === 'dbl') return dbl();
-  else if (act === 'split') return split();
-  else if (act === 'new') return newRound();
-  else return;
-  render();
+  if (b.dataset.n) { if (online()) return; S.n = +b.dataset.n; S.sel = 0; save(); renderNames(); render(); return; }
+  if (b.dataset.b) { if (NET.mode === 'guest') return; S.buyin = +b.dataset.b; save(); render(); return; }
+  if (b.dataset.mp) return mpAction(b.dataset.mp);
+  const a = b.dataset.act; if (!a) return;
+  buzz(); act(a, +b.dataset.a || 0);
 });
 
-$('end').addEventListener('click', () => { if (!$('end').disabled) showFinal(); });
+$('end').addEventListener('click', () => {
+  if ($('end').disabled || NET.mode === 'guest') return;
+  showFinal();
+  if (NET.mode === 'host') sendAll({ t: 'final' });
+});
 $('fback').addEventListener('click', hideFinal);
 $('fnew').addEventListener('click', () => {
+  if (NET.mode === 'guest') return;
   S.players = S.players.map((p, i) => ({ ...mkP(i), name: p.name }));
   S.dealer = []; S.phase = 'bet'; S.turn = null; S.rounds = 0; S.sel = 0;
+  if (NET.mode === 'host') {
+    // Wer weg ist, verliert seinen Platz; die anderen rücken auf.
+    for (let i = NET.seats.length - 1; i > 0; i--) if (!NET.conns.has(NET.seats[i])) removeSeat(i);
+    syncOnline(); sendAll({ t: 'hidefinal' });
+  }
   save(); hideFinal(); render();
 });
 
@@ -720,6 +1188,7 @@ function start(data) {
     return;
   }
   const saved = load();
+  seen = new Set(); fx = {};
   S = { n: Math.min(MAXP, saved.n || 2), skin: SKINS[saved.skin] ? saved.skin : 'graphit', ctrl: saved.ctrl === 'gest' ? 'gest' : 'btn',
     buyin: saved.buyin ?? 10, players: Array.from({ length: MAXP }, (_, i) => mkP(i)), dealer: [], shoe: newShoe(), cid: 0,
     phase: 'bet', turn: null, hidden: true, busy: false, rounds: saved.rounds || 0, sel: 0 };
@@ -735,6 +1204,11 @@ function start(data) {
 }
 window.claude?.hot?.snapshot?.(() => ({ S }));
 window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+
+// Beim ersten Start das Tutorial zeigen; ein Einladungslink (?raum=CODE) führt direkt in den Raum.
+const invite = new URLSearchParams(location.search).get('raum');
+if (invite) { joinRoom(invite); }
+if (!store.get('bj-tut')) openTut();
 </script>
 </body>
 </html>
