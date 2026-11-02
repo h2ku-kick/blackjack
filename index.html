@@ -289,7 +289,7 @@ header .info { margin-left: auto; font-size: 12px; color: var(--muted); text-ali
 .plist em { margin-left: auto; font-style: normal; font-size: 12px; color: var(--muted); }
 .spot .tag { font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
 .spot.away .hands, .spot.away .ring { opacity: .55; }
-.toast { position: fixed; z-index: 40; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); max-width: calc(100% - 48px); box-sizing: border-box;
+.toast { position: fixed; z-index: 40; left: 50%; top: calc(54px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); width: max-content; max-width: min(440px, calc(100% - 48px)); box-sizing: border-box; line-height: 1.4;
   padding: 10px 16px; border-radius: 999px; font-size: 14px; text-align: center; background: var(--glass-hi); animation: drop .22s ease-out; }
 
 /* Tutorial */
@@ -419,6 +419,20 @@ button.chip:active { transform: translateY(2px); box-shadow: 0 0 0 rgba(0,0,0,.3
 .pad .mini-b { font-size: 12px; color: var(--soft); padding: 2px 7px; margin-left: 4px; border-radius: 999px; border: 1px solid var(--glass-line); }
 .pad .msg { flex: 1; font-size: 13px; color: var(--soft); }
 .pad .min-r { display: none; }
+@keyframes hintp { 0%, 100% { box-shadow: 0 0 0 0 var(--active); } 50% { box-shadow: 0 0 0 5px transparent, 0 0 18px 2px var(--active); } }
+.hint { animation: hintp 1.1s ease-in-out infinite; outline: 2px solid var(--active); outline-offset: 2px; border-radius: 999px; }
+.small .hint, .big.hint { outline-offset: 4px; border-radius: 10px; }
+.pad .tipb { display: inline-grid; place-items: center; padding: 1px 5px; vertical-align: middle; }
+.pad .tipb .ico { display: block; width: 15px; height: 15px; }
+.count { position: absolute; top: 64px; right: 40px; padding: 4px 9px; border-radius: 10px; font-size: 12px; line-height: 1.35; text-align: center;
+  background: var(--glass-hi); border: 1px solid var(--glass-line); color: var(--soft); pointer-events: none; }
+.count b { color: var(--active); font-size: 15px; }
+.quiz .stepper { display: flex; align-items: center; justify-content: center; gap: 22px; padding: 6px 0; }
+.quiz .stepper .pill { width: 56px; height: 56px; padding: 0; font-size: 26px; font-weight: 500; }
+.quiz .stepper b { font-size: 40px; font-weight: 600; min-width: 80px; text-align: center; }
+.qres { font-size: 14px; line-height: 1.55; color: var(--soft); }
+.qres b { color: var(--fg); }
+.qres .big-r { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
 .pad .res { font-size: 14px; }
 .pad { container-type: inline-size; }
 .pad .ico { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; display: block; margin: 0 auto; }
@@ -456,6 +470,7 @@ button.chip:active { transform: translateY(2px); box-shadow: 0 0 0 rgba(0,0,0,.3
   .dl { top: 6px; flex-direction: row; justify-content: center; gap: 12px; }
   .dl .hand .card { --w: 38px; --h: 54px; }
   .shoe { top: 10px; right: 9%; }
+  .count { top: 8px; right: calc(9% + 44px); }
   .ring { width: 40px; height: 40px; }
   .spot { gap: 4px; }
   .turn, .ctrl { display: none; }
@@ -527,7 +542,38 @@ button.chip:active { transform: translateY(2px); box-shadow: 0 0 0 rgba(0,0,0,.3
       <summary><h3>Steuerung</h3><span class="val" id="v-ctrl"></span><span class="chev"></span></summary>
       <div class="body">
         <div class="seg" id="cseg"><button data-c="btn">Knöpfe</button><button data-c="gest">Gesten</button></div>
+        <p class="glabel">Tempo</p>
+        <div class="seg" id="spseg"><button data-sp="slow">Langsam</button><button data-sp="normal">Normal</button><button data-sp="fast">Schnell</button></div>
         <p class="note" id="cnote"></p>
+      </div>
+    </details>
+    <details class="grp">
+      <summary><h3>Ton</h3><span class="val" id="v-snd"></span><span class="chev"></span></summary>
+      <div class="body">
+        <div class="seg" id="sseg"><button data-snd="1">An</button><button data-snd="0">Aus</button></div>
+        <p class="note">Karten, Jetons und Gewinne sind zu hören. Auf dem iPhone muss dafür der Stummschalter aus sein.</p>
+      </div>
+    </details>
+    <details class="grp">
+      <summary><h3>Training</h3><span class="val" id="v-train"></span><span class="chev"></span></summary>
+      <div class="body">
+        <p class="glabel">Tipp-Knopf</p>
+        <p class="note">Wenn du dran bist, zeigt <b>Tipp</b>, welcher Zug nach der Grundstrategie richtig ist, und warum.</p>
+        <div class="seg" id="tipseg"><button data-tip="0">Aus</button><button data-tip="1">An</button></div>
+        <p class="glabel">Spielzüge bewerten</p>
+        <p class="note">Jeder deiner Züge wird mit der Grundstrategie verglichen. Bei einem Fehler siehst du, was besser gewesen wäre.</p>
+        <div class="seg" id="jseg"><button data-judge="0">Aus</button><button data-judge="1">An</button></div>
+        <p class="note" id="jscore"></p>
+        <p class="glabel">Kartenzählen</p>
+        <p class="note">Nach der Hi-Lo-Methode: <b>2 bis 6</b> zählen +1, <b>7 bis 9</b> zählen 0, <b>Zehner, Bilder und Asse</b> zählen −1. Ist der Zählstand hoch, sind noch viele starke Karten im Schuh, und das ist gut für dich.</p>
+        <div class="seg" id="trseg"><button data-tr="0">Aus</button><button data-tr="1">An</button></div>
+        <div class="sec" id="trx">
+          <p class="glabel">Zählstand am Tisch</p>
+          <div class="seg" id="tsseg"><button data-ts="1">Anzeigen</button><button data-ts="0">Verstecken</button></div>
+          <p class="glabel">Abfrage nach der Runde</p>
+          <div class="seg" id="tqseg"><button data-tq="1">Jede Runde</button><button data-tq="3">Alle 3</button><button data-tq="0">Nie</button></div>
+          <p class="note" id="tscore"></p>
+        </div>
       </div>
     </details>
     <details class="grp">
@@ -581,6 +627,14 @@ button.chip:active { transform: translateY(2px); box-shadow: 0 0 0 rgba(0,0,0,.3
     <button class="tskip" id="tskip">Tutorial schließen</button>
   </div>
 
+  <div class="final glass quiz" id="quiz" hidden role="dialog" aria-modal="true" aria-labelledby="qtitle">
+    <h2 id="qtitle">Wie ist der Zählstand?</h2>
+    <p class="note">Zähle mit Hi-Lo: 2 bis 6 = +1, 7 bis 9 = 0, Zehner bis Ass = −1. Gezählt wird seit dem letzten Mischen.</p>
+    <div class="stepper"><button class="pill" id="qminus" aria-label="Eins weniger">−</button><b class="num" id="qval" aria-live="polite">0</b><button class="pill" id="qplus" aria-label="Eins mehr">+</button></div>
+    <div class="qres" id="qres"></div>
+    <div class="row2"><button class="pill" id="qskip">Überspringen</button><button class="pill main" id="qok">Prüfen</button></div>
+  </div>
+
   <div class="toast glass" id="toast" hidden role="status" aria-live="polite"></div>
 
   <section class="table" id="table">
@@ -592,6 +646,7 @@ STEHT AB 17</span></div>
       <text class="p1"><textPath href="#arc1" startOffset="50%" text-anchor="middle">BLACKJACK ZAHLT 3 ZU 2</textPath></text>
       <text class="p2"><textPath href="#arc2" startOffset="50%" text-anchor="middle">BANK ZIEHT BIS 16 · STEHT AB 17</textPath></text>
     </svg>
+    <div class="count num" id="count" hidden></div>
     <div class="shoe" id="deck"><i></i><i></i><i></i></div>
     <div class="dl"><div class="hand" id="dhand"></div><div class="lbl" id="dlbl"></div></div>
     <div id="seats"></div>
@@ -609,11 +664,73 @@ const MIN = 10, PACK = 1000, MAXP = 5, CHIPS = [10, 25, 50, 100];
 const SKINS = { klassik: 'Klassik', kristall: 'Kristall', lagune: 'Lagune', opal: 'Opal', glut: 'Glut',
   graphit: 'Graphit', aurora: 'Aurora', smaragd: 'Smaragd', koralle: 'Koralle', eis: 'Eis', neon: 'Neon' };
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const sleep = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 120) : ms));
+// Tempo: Langsam, Normal oder Schnell verlängert bzw. verkürzt alle Pausen und Animationen
+const SPEEDS = { slow: 1.6, normal: 1, fast: .45 };
+const spd = () => SPEEDS[PREF.speed] || 1;
+const sleep = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 120) : ms * spd()));
+const anim = ms => Math.round(ms * Math.min(1.3, spd()));
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const eur = v => v.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
 const buzz = () => { try { navigator.vibrate && navigator.vibrate(12); } catch (e) {} };
+// Einstellungen nur für dieses Gerät: Ton und Training
+const PREF = Object.assign({ sound: true, train: false, show: true, quiz: 3, qn: 0, qok: 0, speed: 'normal', tip: false, judge: false, sn: 0, sok: 0 }, (() => { try { return JSON.parse(localStorage.getItem('bj-pref')) || {}; } catch (e) { return {}; } })());
+const savePref = () => { try { localStorage.setItem('bj-pref', JSON.stringify(PREF)); } catch (e) {} };
+
+// Töne werden mit Web Audio erzeugt, ganz ohne Audiodateien
+let AC = null;
+function ac() {
+  if (!AC) { const C = window.AudioContext || window.webkitAudioContext; if (!C) return null; try { AC = new C(); } catch (e) { return null; } }
+  if (AC.state === 'suspended') AC.resume().catch(() => {});
+  return AC;
+}
+document.addEventListener('pointerdown', () => { if (PREF.sound) ac(); }, { passive: true });
+function env(ctx, t, peak, dur, attack = .005) {
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + attack); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  g.connect(ctx.destination); return g;
+}
+function noise(ctx, dur) {
+  const b = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * dur), ctx.sampleRate), d = b.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  const n = ctx.createBufferSource(); n.buffer = b; return n;
+}
+function tone(ctx, t, f, dur, peak, type = 'sine', f2) {
+  const o = ctx.createOscillator(); o.type = type; o.frequency.setValueAtTime(f, t);
+  if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+  o.connect(env(ctx, t, peak, dur)); o.start(t); o.stop(t + dur + .02);
+}
+const SFX = {
+  card(ctx, t) {
+    const n = noise(ctx, .1), f = ctx.createBiquadFilter();
+    f.type = 'bandpass'; f.Q.value = .8; f.frequency.setValueAtTime(3200, t); f.frequency.exponentialRampToValueAtTime(900, t + .09);
+    n.connect(f).connect(env(ctx, t, .32, .09)); n.start(t); n.stop(t + .1);
+  },
+  flip(ctx, t) {
+    const n = noise(ctx, .07), f = ctx.createBiquadFilter();
+    f.type = 'highpass'; f.frequency.value = 1800;
+    n.connect(f).connect(env(ctx, t, .22, .06)); n.start(t); n.stop(t + .07);
+  },
+  chip(ctx, t) { tone(ctx, t, 2600, .09, .12); tone(ctx, t + .04, 3300, .12, .09); SFX.flip(ctx, t); },
+  shuffle(ctx, t) { for (let k = 0; k < 10; k++) SFX.card(ctx, t + k * .045); },
+  win(ctx, t) { [660, 880, 1320].forEach((f, k) => tone(ctx, t + k * .1, f, .32, .1, 'triangle')); },
+  bj(ctx, t) { [523, 659, 784, 1047, 1319].forEach((f, k) => tone(ctx, t + k * .085, f, .4, .1, 'triangle')); },
+  lose(ctx, t) { tone(ctx, t, 330, .38, .1, 'sine', 160); },
+  bust(ctx, t) { tone(ctx, t, 150, .22, .28, 'sine', 55); }
+};
+function sfx(name, delay = 0) {
+  if (!PREF.sound) return;
+  const ctx = ac(); if (!ctx || ctx.state !== 'running') return;
+  try { SFX[name](ctx, ctx.currentTime + delay); } catch (e) {}
+}
+
+// Kartenzählen nach Hi-Lo
+const hilo = c => ['2', '3', '4', '5', '6'].includes(c.r) ? 1 : ['7', '8', '9'].includes(c.r) ? 0 : -1;
+const fmtCount = v => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toLocaleString('de-DE', { maximumFractionDigits: 1 });
+// Der verdeckte Karte der Bank zählt erst, wenn sie aufgedeckt ist.
+const liveCount = () => (S.rc || 0) - (S.hidden && S.dealer[1] ? hilo(S.dealer[1]) : 0);
+const decksLeft = () => Math.max(.5, (S.left ?? S.shoe.length) / 52);
+const trueCount = () => Math.round(liveCount() / decksLeft() * 10) / 10;
 const store = {
   get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -635,8 +752,10 @@ function newShoe() {
   return s;
 }
 function draw() {
-  if (S.shoe.length < 52) S.shoe = newShoe();
-  return { ...S.shoe.pop(), id: ++S.cid };
+  if (S.shoe.length < 52) { S.shoe = newShoe(); S.rc = 0; fx.shuffle = true; }
+  const c = { ...S.shoe.pop(), id: ++S.cid };
+  S.rc = (S.rc || 0) + hilo(c); S.left = S.shoe.length;
+  return c;
 }
 const cv = c => c.r === 'A' ? 11 : ['J','Q','K'].includes(c.r) ? 10 : +c.r;
 function value(h) {
@@ -697,25 +816,59 @@ function soft(h) {
   while (t > 21 && a) { t -= 10; a--; }
   return a > 0;
 }
-function botChoice() {
+// Grundstrategie: Empfehlung mit kurzer Begründung (für Computer, Tipp-Knopf und Bewertung)
+function advice() {
   const h = curH().cards, t = value(h), up = cv(S.dealer[0]), sf = soft(h);
+  const r = (act, why) => ({ act, why });
   if (canSplit()) {
-    const r = cv(h[0]);
-    if (r === 11 || r === 8) return 'split';
-    if (r === 9 && ![7, 10, 11].includes(up)) return 'split';
-    if ((r === 2 || r === 3 || r === 7) && up <= 7) return 'split';
-    if (r === 6 && up <= 6) return 'split';
-    if (r === 4 && (up === 5 || up === 6)) return 'split';
+    const v = cv(h[0]);
+    if (v === 11 || v === 8) return r('split', 'Asse und Achten teilt man immer.');
+    if (v === 9 && ![7, 10, 11].includes(up)) return r('split', 'Neunen teilen, außer die Bank zeigt 7, 10 oder Ass.');
+    if ((v === 2 || v === 3 || v === 7) && up <= 7) return r('split', 'Zweien, Dreien und Siebenen gegen 2 bis 7 teilen.');
+    if (v === 6 && up <= 6) return r('split', 'Sechsen gegen eine schwache Bank (2 bis 6) teilen.');
+    if (v === 4 && (up === 5 || up === 6)) return r('split', 'Vieren nur gegen 5 oder 6 teilen.');
   }
   if (canDbl()) {
-    if (!sf && (t === 11 || (t === 10 && up <= 9) || (t === 9 && up >= 3 && up <= 6))) return 'dbl';
-    if (sf && ((t >= 13 && t <= 14 && up >= 5 && up <= 6) || (t >= 15 && t <= 16 && up >= 4 && up <= 6) || (t >= 17 && t <= 18 && up >= 3 && up <= 6))) return 'dbl';
+    if (!sf && t === 11) return r('dbl', 'Mit 11 doppeln: Jede Zehnerkarte bringt 21.');
+    if (!sf && t === 10 && up <= 9) return r('dbl', 'Mit 10 doppeln, wenn die Bank 9 oder weniger zeigt.');
+    if (!sf && t === 9 && up >= 3 && up <= 6) return r('dbl', 'Mit 9 gegen 3 bis 6 doppeln, die Bank ist schwach.');
+    if (sf && ((t >= 13 && t <= 14 && up >= 5 && up <= 6) || (t >= 15 && t <= 16 && up >= 4 && up <= 6) || (t >= 17 && t <= 18 && up >= 3 && up <= 6)))
+      return r('dbl', 'Weiche Hand gegen schwache Bank: doppeln, du kannst nicht überkaufen.');
   }
-  if (sf) return t <= 17 || (t === 18 && up >= 9) ? 'hit' : 'stand';
-  if (t <= 11) return 'hit';
-  if (t === 12) return up >= 4 && up <= 6 ? 'stand' : 'hit';
-  if (t <= 16) return up <= 6 ? 'stand' : 'hit';
-  return 'stand';
+  if (sf) {
+    if (t <= 17) return r('hit', 'Weiche 17 oder weniger: ziehen, mit dem Ass kannst du nicht überkaufen.');
+    if (t === 18 && up >= 9) return r('hit', 'Weiche 18 gegen 9, 10 oder Ass: ziehen, 18 reicht hier oft nicht.');
+    return r('stand', 'Weiche 18 oder mehr: stehen bleiben.');
+  }
+  if (t <= 11) return r('hit', 'Mit 11 oder weniger kannst du nicht überkaufen: ziehen.');
+  if (t === 12) return up >= 4 && up <= 6 ? r('stand', '12 gegen 4 bis 6: stehen, die Bank überkauft sich oft.') : r('hit', '12 gegen 2, 3 oder 7 bis Ass: ziehen.');
+  if (t <= 16) return up <= 6 ? r('stand', `${t} gegen eine schwache Bank (2 bis 6): stehen, sie überkauft sich oft.`)
+    : r('hit', `${t} gegen 7 bis Ass: ziehen, die Bank kommt wahrscheinlich auf 17 oder mehr.`);
+  return r('stand', '17 oder mehr: stehen bleiben.');
+}
+const botChoice = () => advice().act;
+const ACT_NAME = { hit: 'Karte', stand: 'Stehen', dbl: 'Doppeln', split: 'Teilen' };
+function handDesc() {
+  const h = curH().cards, t = value(h), up = S.dealer[0];
+  const me = h.length === 2 && cv(h[0]) === cv(h[1]) ? `Paar ${h[0].r}` : soft(h) ? `weiche ${t}` : `${t}`;
+  return `${me} gegen ${up.r === 'A' ? 'Ass' : up.r}`;
+}
+// Tipp: das empfohlene Feld leuchtet für die aktuelle Hand auf
+let hint = null;
+const handKey = () => S.turn ? `${S.turn.p}-${S.turn.h}-${curH().cards.length}-${S.cid}` : '';
+function showTip() {
+  if (S.phase !== 'play' || !S.turn || !mine(S.turn.p)) return;
+  const a = advice();
+  hint = { key: handKey(), act: a.act };
+  toast(`Tipp: ${ACT_NAME[a.act]}. ${a.why}`);
+  render();
+}
+// Bewertung: jeder Zug wird mit der Grundstrategie verglichen
+function judge(name) {
+  if (!PREF.judge || S.phase !== 'play' || !S.turn || S.busy || !mine(S.turn.p) || !ACT_NAME[name]) return;
+  const a = advice(), ok = a.act === name;
+  PREF.sn++; if (ok) PREF.sok++; savePref();
+  toast(ok ? `Richtig: ${ACT_NAME[name]} · ${handDesc()}` : `Besser wäre ${ACT_NAME[a.act]} gewesen. ${a.why}`);
 }
 let botT = 0;
 function botTurn() {
@@ -725,7 +878,7 @@ function botTurn() {
     if (S !== s || S.phase !== 'play' || S.busy || !S.turn || !cur().bot) return;
     const c = botChoice();
     if (c === 'split') split(); else if (c === 'dbl') dbl(); else if (c === 'hit') hit(); else stand();
-  }, reduce ? 300 : 900);
+  }, reduce ? 300 : 900 * spd());
 }
 function hit() {
   const h = curH(); h.cards.push(draw());
@@ -787,7 +940,7 @@ function settle() {
     }
   }
   S.rounds = (S.rounds || 0) + 1;
-  S.phase = 'end'; S.turn = null; save(); render();
+  S.phase = 'end'; S.turn = null; fx.end = true; save(); render();
 }
 function newRound() {
   for (const p of active()) { p.bet = Math.max(MIN, Math.min(p.base, p.chips)); p.hands = []; p.net = 0; p.ready = false; if (p.bot) botBet(p); }
@@ -847,13 +1000,13 @@ function showFinal() {
   $('panel').hidden = true; $('help').hidden = true; $('menu').setAttribute('aria-expanded', false);
   $('final').hidden = false; $('scrim').hidden = false;
 }
-function hideFinal() { $('final').hidden = true; $('scrim').hidden = $('tut').hidden; }
+function hideFinal() { $('final').hidden = true; $('scrim').hidden = $('tut').hidden && $('quiz').hidden; }
 
 // Kleine Hinweise am unteren Rand
 let toastT;
 function toast(msg) {
   const t = $('toast'); t.textContent = msg; t.hidden = false;
-  clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 3200);
+  clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, Math.max(3200, msg.length * 55));
 }
 
 // Mehrspieler: Räume über PeerJS (WebRTC, direkt zwischen den Geräten).
@@ -999,7 +1152,7 @@ function removeSeat(k) {
 }
 function broadcast() {
   if (NET.mode !== 'host' || !NET.conns.size) return;
-  const { shoe, skin, ctrl, sel, ...rest } = S;
+  const { shoe, skin, ctrl, sel, ...rest } = S; rest.left = S.shoe.length;
   sendAll({ t: 'state', S: rest, online: NET.online, fx });
 }
 
@@ -1155,8 +1308,21 @@ function renderPanel() {
   $('skinname').textContent = SKINS[S.skin];
   $('v-mp').textContent = online() ? 'Raum ' + NET.code : 'Aus';
   $('v-pl').textContent = online() ? `${S.n} im Raum` : S.n;
-  $('v-ctrl').textContent = S.ctrl === 'gest' ? 'Gesten' : 'Knöpfe';
+  $('v-ctrl').textContent = (S.ctrl === 'gest' ? 'Gesten' : 'Knöpfe') + ({ slow: ' · langsam', fast: ' · schnell' }[PREF.speed] || '');
   $('v-buy').textContent = S.buyin ? eur(S.buyin) : 'Aus';
+  $('v-snd').textContent = PREF.sound ? 'An' : 'Aus';
+  $('v-train').textContent = [PREF.tip && 'Tipp', PREF.judge && 'Bewertung', PREF.train && 'Zählen'].filter(Boolean).join(' · ') || 'Aus';
+  document.querySelectorAll('#tipseg button').forEach(b => b.setAttribute('aria-pressed', (b.dataset.tip === '1') === PREF.tip));
+  document.querySelectorAll('#jseg button').forEach(b => b.setAttribute('aria-pressed', (b.dataset.judge === '1') === PREF.judge));
+  document.querySelectorAll('#spseg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.sp === (PREF.speed || 'normal')));
+  $('jscore').hidden = !PREF.judge;
+  $('jscore').textContent = PREF.sn ? `Bisher ${PREF.sok} von ${PREF.sn} Zügen richtig (${Math.round(PREF.sok / PREF.sn * 100)} %).` : 'Noch kein Zug bewertet.';
+  document.querySelectorAll('#sseg button').forEach(b => b.setAttribute('aria-pressed', (b.dataset.snd === '1') === PREF.sound));
+  document.querySelectorAll('#trseg button').forEach(b => b.setAttribute('aria-pressed', (b.dataset.tr === '1') === PREF.train));
+  document.querySelectorAll('#tsseg button').forEach(b => b.setAttribute('aria-pressed', (b.dataset.ts === '1') === PREF.show));
+  document.querySelectorAll('#tqseg button').forEach(b => b.setAttribute('aria-pressed', +b.dataset.tq === PREF.quiz));
+  $('trx').hidden = !PREF.train;
+  $('tscore').textContent = PREF.qn ? `Bisher ${PREF.qok} von ${PREF.qn} Abfragen richtig (${Math.round(PREF.qok / PREF.qn * 100)} %).` : 'Noch keine Abfrage beantwortet.';
   $('cnote').textContent = S.ctrl === 'gest'
     ? 'Auf den Tisch tippen gibt eine Karte, zur Seite wischen heißt Stehen. Teilen und Doppeln bleiben als Knöpfe.'
     : 'Große Kugel für Karte, daneben Stehen, darunter Teilen und Doppeln.';
@@ -1268,10 +1434,10 @@ function render() {
       const sp = canSplit() && !S.busy ? '' : ' disabled', db = canDbl() && !S.busy ? '' : ' disabled', off = S.busy ? ' disabled' : '';
       if (S.ctrl === 'gest') {
         center = true;
-        ctrl = `<div class="pills"><button class="pill" data-act="split"${sp}>Teilen</button><button class="pill" data-act="dbl"${db}>Doppeln</button></div>`;
+        ctrl = `<div class="pills"><button class="pill" data-act="split"${sp}>Teilen</button><button class="pill" data-act="dbl"${db}>Doppeln</button>${PREF.tip ? `<button class="pill" data-act="tip" aria-label="Tipp"${off}>Tipp</button>` : ''}</div>`;
       } else {
         ctrl = `<div class="side"><button class="big" data-act="stand"${off}>Stehen</button>
-          <div class="small"><button data-act="split"${sp}>Teilen</button><button data-act="dbl"${db}>Doppeln</button></div></div>
+          <div class="small"><button data-act="split"${sp}>Teilen</button><button data-act="dbl"${db}>Doppeln</button>${PREF.tip ? `<button data-act="tip"${off}>Tipp</button>` : ''}</div></div>
           <button class="ball" data-act="hit"${off}>Karte</button>`;
       }
     }
@@ -1288,6 +1454,13 @@ function render() {
   $('ctrl').innerHTML = land ? '' : ctrl;
   $('ctrl').classList.toggle('center', center);
   $('pads').innerHTML = land ? padsHtml() : '';
+  if (hint && S.phase === 'play' && hint.key === handKey())
+    document.querySelectorAll(`#ctrl [data-act="${hint.act}"], #pads [data-act="${hint.act}"][data-seat="${S.turn.p}"]`).forEach(b => b.classList.add('hint'));
+  else hint = null;
+  const cnt = $('count'), showCnt = PREF.train && PREF.show && $('quiz').hidden;
+  cnt.hidden = !showCnt;
+  if (showCnt) cnt.innerHTML = `Zählstand <b>${fmtCount(liveCount())}</b><br>echt ${fmtCount(trueCount())}`;
+  maybeQuiz();
   document.body.classList.toggle('many', land && mySeats().length >= 4);
   broadcast();
   animate();
@@ -1301,7 +1474,8 @@ const ICON = {
   split: svgI('<path d="M12 21v-7M12 14L6.5 6.5M12 14l5.5-7.5M6 11V6h5M18 11V6h-5"/>'),
   dbl: '<span class="ico-t" aria-hidden="true">×2</span>',
   ok: svgI('<path d="M5 12.5l4.5 4.5L19 7"/>'),
-  next: svgI('<path d="M5 12h13M13 6l6 6-6 6"/>')
+  next: svgI('<path d="M5 12h13M13 6l6 6-6 6"/>'),
+  tip: svgI('<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>')
 };
 // Querformat: eine Bedienfläche pro Mensch am Gerät, nebeneinander am unteren Rand
 function padsHtml() {
@@ -1329,7 +1503,8 @@ function padsHtml() {
     } else if (S.phase === 'play' && S.turn && S.turn.p === i) {
       on = true;
       const sp = canSplit() && !S.busy ? '' : ' disabled', db = canDbl() && !S.busy ? '' : ' disabled', off = S.busy ? ' disabled' : '';
-      sub = `<b class="num">${value(curH().cards)}</b>${p.hands.length > 1 ? ` · Hand ${S.turn.h + 1}/${p.hands.length}` : ''}`;
+      sub = `<b class="num">${value(curH().cards)}</b>${p.hands.length > 1 ? ` · Hand ${S.turn.h + 1}/${p.hands.length}` : ''}`
+        + (PREF.tip ? ` <button class="mini-b tipb" data-act="tip" data-seat="${i}" aria-label="Tipp" title="Tipp"${off}>${ICON.tip}</button>` : '');
       body = `<div class="row acts"><button class="pill main" data-act="hit" data-seat="${i}" aria-label="Karte" title="Karte"${off}>${ICON.hit}</button>`
         + `<button class="pill" data-act="stand" data-seat="${i}" aria-label="Stehen" title="Stehen"${off}>${ICON.stand}</button>`
         + `<button class="pill" data-act="dbl" data-seat="${i}" aria-label="Doppeln" title="Doppeln"${db}>${ICON.dbl}</button>`
@@ -1352,6 +1527,18 @@ landMQ.addEventListener && landMQ.addEventListener('change', () => { seen = new 
 // Karten fliegen verdeckt aus dem Schuh und drehen sich beim Ankommen um
 function animate() {
   const cards = document.querySelectorAll('#table .card[data-id]');
+  // Töne zu allem, was gerade neu passiert
+  const fresh = [...cards].filter(c => !seen.has(c.dataset.id)).length;
+  for (let k = 0; k < Math.min(fresh, 6); k++) sfx('card', k * .06);
+  if (fx.chip != null) sfx('chip');
+  if (fx.reveal) sfx('flip', .1);
+  if (fx.shake) sfx('bust', .25);
+  if (fx.shuffle) { sfx('shuffle'); if (PREF.train) toast('Neu gemischt, der Zählstand beginnt wieder bei 0'); }
+  if (fx.end) {
+    const ms = mySeats().map(i => active()[i]).filter(Boolean);
+    const net = ms.reduce((a, p) => a + p.net, 0);
+    if (ms.some(p => p.hands.some(h => h.res === 'Blackjack'))) sfx('bj', .1); else if (net > 0) sfx('win', .1); else if (net < 0) sfx('lose', .1);
+  }
   if (reduce || !Element.prototype.animate) { cards.forEach(c => seen.add(c.dataset.id)); fx = {}; return; }
   const d = $('deck').getBoundingClientRect();
   cards.forEach(c => {
@@ -1364,15 +1551,15 @@ function animate() {
       { transform: `translate(${dx}px, ${dy}px) rotate(-18deg) scale(.6)` },
       { transform: `translate(${dx * .15}px, ${dy * .15 - 10}px) rotate(4deg) scale(1.06)`, offset: .75 },
       { transform: 'none' }
-    ], { duration: 340, easing: 'cubic-bezier(.25,.8,.3,1)' });
+    ], { duration: anim(340), easing: 'cubic-bezier(.25,.8,.3,1)' });
     const inn = c.querySelector('.in');
     if (!inn.classList.contains('flip')) inn.animate([
       { transform: 'rotateY(180deg)' }, { transform: 'rotateY(180deg)', offset: .45 }, { transform: 'none' }
-    ], { duration: 420, easing: 'ease-out' });
+    ], { duration: anim(420), easing: 'ease-out' });
   });
   if (fx.reveal) {
     const h = document.querySelector('#dhand .card:nth-child(2) .in');
-    h && h.animate([{ transform: 'rotateY(180deg) scale(1)' }, { transform: 'rotateY(90deg) scale(1.12)' }, { transform: 'none' }], { duration: 560, easing: 'ease-in-out' });
+    h && h.animate([{ transform: 'rotateY(180deg) scale(1)' }, { transform: 'rotateY(90deg) scale(1.12)' }, { transform: 'none' }], { duration: anim(560), easing: 'ease-in-out' });
   }
   if (fx.shake) {
     const h = document.querySelector(`[data-key="${fx.shake}"]`);
@@ -1424,6 +1611,8 @@ function act(name, a, seatArg) {
     return render();
   }
   const seat = seatArg ?? (S.phase === 'bet' ? S.sel : S.turn ? S.turn.p : S.sel);
+  if (name === 'tip') return showTip();
+  if (S.phase === 'play' && S.turn && S.turn.p === seat) judge(name);
   if (NET.mode === 'guest') {
     if (!REMOTE_ACTS.includes(name) || !mine(seat)) return;
     if (NET.host && NET.host.open) NET.host.send({ t: 'act', act: name, a });
@@ -1502,6 +1691,15 @@ const TUT = [
     <ul><li>Jeder setzt auf seiner Fläche und tippt auf <b>Bereit</b>. Sind alle bereit, wird ausgeteilt.</li>
     <li>Wer dran ist, dessen Fläche leuchtet auf und zeigt Karte, Stehen, Doppeln und Teilen.</li>
     <li>Ideal für drei Spieler an einem Handy, das in der Mitte liegt.</li></ul>` },
+  { t: 'Richtig spielen lernen', b: () => `<p>Im Menü unter <b>Training</b> hilft dir die App, die <b>Grundstrategie</b> zu lernen:</p>
+    <ul><li><b>Tipp-Knopf</b>: Tippe auf <b>Tipp</b>, dann leuchtet der richtige Zug auf, mit kurzer Begründung.</li>
+    <li><b>Spielzüge bewerten</b>: Nach jedem Zug siehst du, ob er richtig war, und deine Trefferquote im Menü.</li></ul>
+    <p>Unter <b>Steuerung → Tempo</b> stellst du ein, wie schnell ausgeteilt wird und die Computer spielen.</p>` },
+  { t: 'Kartenzählen üben', b: () => `<p>Im Menü unter <b>Training</b> lernst du auch Kartenzählen nach der <b>Hi-Lo</b>-Methode.</p>
+    <div class="ex">${ex([['5', '♣']], '+1')}${ex([['8', '♥']], '0')}${ex([['K', '♠']], '−1')}</div>
+    <ul><li>Zähle jede Karte, die aufgedeckt wird, zusammen. Nach dem Mischen beginnt es bei 0.</li>
+    <li>Ein hoher Zählstand heißt: Es sind noch viele Zehner und Asse im Schuh. Das ist gut für dich.</li>
+    <li>Der Zählstand kann am Tisch eingeblendet werden. Nach der Runde fragt die App, ob du richtig mitgezählt hast.</li></ul>` },
   { t: 'Zusammen in einem Raum', b: () => `<p>Mit <b>Mehrspieler</b> im Menü spielt jeder am eigenen Handy am selben Tisch.</p>
     <ul><li>Eine Person tippt auf <b>Raum erstellen</b> und bekommt einen Code. Mit <b>Einladen</b> teilt sie einen Link.</li>
     <li>Die anderen geben den Code ein und tippen auf <b>Beitreten</b>, oder öffnen einfach den Link.</li>
@@ -1525,7 +1723,7 @@ function openTut() {
   $('panel').hidden = true; $('help').hidden = true; $('menu').setAttribute('aria-expanded', false);
   $('tut').hidden = false; $('scrim').hidden = false; showTut(0); $('tnext').focus();
 }
-function closeTut() { $('tut').hidden = true; $('scrim').hidden = $('final').hidden; store.set('bj-tut', '1'); }
+function closeTut() { $('tut').hidden = true; $('scrim').hidden = $('final').hidden && $('quiz').hidden; store.set('bj-tut', '1'); }
 $('help').addEventListener('click', openTut);
 $('tutopen').addEventListener('click', openTut);
 $('tprev').addEventListener('click', () => showTut(tutI - 1));
@@ -1538,6 +1736,45 @@ document.addEventListener('keydown', e => {
   else if (e.key === 'ArrowLeft') showTut(tutI - 1);
 });
 
+// Abfrage beim Kartenzählen
+let quizRound = -1, quizT = 0, quizVal = 0, quizDone = false;
+function maybeQuiz() {
+  if (!PREF.train || !PREF.quiz || S.phase !== 'end' || !S.rounds || S.rounds % PREF.quiz || quizRound === S.rounds) return;
+  quizRound = S.rounds;
+  clearTimeout(quizT);
+  quizT = setTimeout(() => { if (S.phase === 'end' && $('final').hidden && $('tut').hidden) openQuiz(); }, reduce ? 200 : 1300 * spd());
+}
+function openQuiz() {
+  quizVal = 0; quizDone = false;
+  $('qval').textContent = fmtCount(0); $('qres').innerHTML = '';
+  $('qok').textContent = 'Prüfen'; $('qskip').hidden = false;
+  setMenu(false);
+  $('quiz').hidden = false; $('scrim').hidden = false; render(); $('qok').focus();
+}
+function closeQuiz() { $('quiz').hidden = true; $('scrim').hidden = $('final').hidden && $('tut').hidden; render(); }
+function stepQuiz(d) { if (quizDone) return; quizVal += d; $('qval').textContent = fmtCount(quizVal); buzz(); }
+function checkQuiz() {
+  if (quizDone) return closeQuiz();
+  const rc = liveCount(), tc = trueCount(), ok = quizVal === rc;
+  PREF.qn++; if (ok) PREF.qok++; savePref();
+  quizDone = true;
+  $('qres').innerHTML = `<div class="big-r ${ok ? 'up' : 'down'}">${ok ? 'Richtig!' : `Nicht ganz, es sind ${fmtCount(rc)}`}</div>
+    Echter Zählstand: <b>${fmtCount(tc)}</b> (Zählstand geteilt durch ${decksLeft().toLocaleString('de-DE', { maximumFractionDigits: 1 })} übrige Decks).<br>
+    ${tc >= 2 ? 'Viele hohe Karten übrig: jetzt lohnt es sich, mehr zu setzen.' : tc <= -1 ? 'Viele niedrige Karten übrig: lieber klein setzen.' : 'Ausgeglichen: normal weiterspielen.'}`;
+  $('qok').textContent = 'Weiter'; $('qskip').hidden = true;
+  sfx(ok ? 'win' : 'lose');
+}
+$('qminus').addEventListener('click', () => stepQuiz(-1));
+$('qplus').addEventListener('click', () => stepQuiz(1));
+$('qok').addEventListener('click', checkQuiz);
+$('qskip').addEventListener('click', closeQuiz);
+document.addEventListener('keydown', e => {
+  if ($('quiz').hidden) return;
+  if (e.key === 'Escape') closeQuiz();
+  else if (e.key === 'ArrowUp' || e.key === '+') stepQuiz(1);
+  else if (e.key === 'ArrowDown' || e.key === '-') stepQuiz(-1);
+});
+
 // Menü
 function setMenu(open) {
   $('panel').hidden = $('scrim').hidden = !open;
@@ -1546,7 +1783,7 @@ function setMenu(open) {
   if (open) { renderNames(); renderPanel(); }
 }
 $('menu').addEventListener('click', () => setMenu($('panel').hidden));
-$('scrim').addEventListener('click', () => { if ($('final').hidden && $('tut').hidden) setMenu(false); });
+$('scrim').addEventListener('click', () => { if ($('final').hidden && $('tut').hidden && $('quiz').hidden) setMenu(false); });
 $('names').addEventListener('input', e => {
   const i = +e.target.dataset.i, p = S.players[i]; if (!p) return;
   const name = cleanName(e.target.value, i);
@@ -1566,6 +1803,13 @@ document.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b || b.disabled || b.id) return;
   if (b.dataset.s) { S.skin = b.dataset.s; save(); render(); return; }
   if (b.dataset.c) { S.ctrl = b.dataset.c; save(); render(); return; }
+  if (b.dataset.snd) { PREF.sound = b.dataset.snd === '1'; savePref(); if (PREF.sound) { ac(); setTimeout(() => sfx('chip'), 50); } render(); return; }
+  if (b.dataset.tr) { PREF.train = b.dataset.tr === '1'; savePref(); render(); return; }
+  if (b.dataset.ts) { PREF.show = b.dataset.ts === '1'; savePref(); render(); return; }
+  if (b.dataset.tq) { PREF.quiz = +b.dataset.tq; savePref(); render(); return; }
+  if (b.dataset.tip) { PREF.tip = b.dataset.tip === '1'; savePref(); render(); return; }
+  if (b.dataset.judge) { PREF.judge = b.dataset.judge === '1'; savePref(); render(); return; }
+  if (b.dataset.sp) { PREF.speed = b.dataset.sp; savePref(); render(); return; }
   if (b.dataset.n) { if (online()) return; S.n = +b.dataset.n; S.sel = 0; save(); renderNames(); render(); return; }
   if (b.dataset.b) { if (NET.mode === 'guest') return; S.buyin = +b.dataset.b; save(); render(); return; }
   if (b.dataset.mp) return mpAction(b.dataset.mp);
@@ -1610,7 +1854,7 @@ function start(data) {
   }
   const saved = load();
   seen = new Set(); fx = {};
-  S = { n: Math.min(MAXP, saved.n || 2), skin: SKINS[saved.skin] ? saved.skin : 'graphit', ctrl: saved.ctrl === 'gest' ? 'gest' : 'btn',
+  S = { n: Math.min(MAXP, saved.n || 2), skin: SKINS[saved.skin] ? saved.skin : 'klassik', ctrl: saved.ctrl === 'gest' ? 'gest' : 'btn',
     buyin: saved.buyin ?? 10, players: Array.from({ length: MAXP }, (_, i) => mkP(i)), dealer: [], shoe: newShoe(), cid: 0,
     phase: 'bet', turn: null, hidden: true, busy: false, rounds: saved.rounds || 0, sel: 0 };
   (saved.players || []).forEach((q, i) => {
@@ -1631,6 +1875,11 @@ window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude
 const invite = new URLSearchParams(location.search).get('raum');
 if (invite) { joinRoom(invite); }
 if (!store.get('bj-tut')) openTut();
+
+// Offline spielbar: der Service Worker hält App, Schrift und Symbole im Speicher
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+}
 </script>
 </body>
 </html>
