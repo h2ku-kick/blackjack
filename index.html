@@ -16,10 +16,10 @@
 <title>Blackjack</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap">
 <style>
 /* Ein Bildschirm: Kopfzeile, ein Glastisch mit Bank oben und Plätzen im Bogen, darunter Ablage und Steuerung.
-   Sechs Designs als feste Welten (data-skin); Jetons haben feste Casino-Farben. */
+   Elf Designs als feste Welten (data-skin): Farben, Liquid Glass und ein klassischer Casinotisch; Jetons haben feste Casino-Farben. */
 :root {
   --sans: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
   --blur: blur(18px) saturate(160%);
@@ -98,6 +98,109 @@
 }
 [data-skin="neon"] .seg button[aria-pressed="true"] { background: #c8ff00; color: #06110d; }
 
+/* Liquid Glass: kräftige Unschärfe, Lichtkanten oben und unten, der Hintergrund fließt langsam */
+[data-skin="kristall"] {
+  --bg: #1a1030;
+  --bg-img: radial-gradient(at 20% 15%, #ff5ea8 0, transparent 40%), radial-gradient(at 85% 25%, #39b8ff 0, transparent 42%), radial-gradient(at 70% 85%, #ffb347 0, transparent 45%), radial-gradient(at 10% 80%, #7b5cff 0, transparent 45%), linear-gradient(160deg, #241245, #0d1a3a);
+  --blur: blur(3px) saturate(130%);
+  --glass: rgba(255,255,255,.03); --glass-hi: rgba(255,255,255,.08); --glass-line: rgba(255,255,255,.5);
+  --shadow: inset 0 1px 0 rgba(255,255,255,.6), inset 0 -1px 0 rgba(255,255,255,.15), 0 4px 18px rgba(0,0,0,.12);
+  --table-shadow: 0 0 0 transparent; --scrim: rgba(0,0,0,.06);
+  --fg: #ffffff; --muted: rgba(255,255,255,.78); --soft: rgba(255,255,255,.92);
+  --btn: radial-gradient(circle at 32% 24%, rgba(255,255,255,.95) 0 7%, rgba(255,255,255,0) 38%), radial-gradient(circle, rgba(255,255,255,.22), rgba(255,255,255,.06) 70%); --btn-fg: #ffffff;
+  --btn-shadow: inset 0 0 0 1.5px rgba(255,255,255,.7), inset 0 -6px 14px rgba(255,255,255,.12), 0 8px 24px rgba(0,0,0,.15);
+  --active: #ffffff;
+  --card: linear-gradient(160deg, rgba(255,255,255,.9), rgba(240,240,255,.74));
+  --back: repeating-linear-gradient(135deg, rgba(255,255,255,.55) 0 3px, rgba(255,255,255,.22) 3px 6px);
+  --win: #8dffc4; --lose: #ffb3ad;
+  text-shadow: 0 1px 3px rgba(0,0,0,.35);
+}
+[data-skin="kristall"] .table { background: linear-gradient(180deg, transparent 40%, rgba(255,255,255,.04)); -webkit-backdrop-filter: none; backdrop-filter: none;
+  box-shadow: inset 0 -1.5px 0 rgba(255,255,255,.65), inset 0 -24px 40px -20px rgba(255,255,255,.18); }
+[data-skin="kristall"] .panel, [data-skin="kristall"] .final { -webkit-backdrop-filter: blur(10px) saturate(140%); backdrop-filter: blur(10px) saturate(140%); }
+[data-skin="kristall"] .ball { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+[data-skin="kristall"] .seg button[aria-pressed="true"] { background: rgba(255,255,255,.28); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.6); }
+[data-skin="lagune"] {
+  --bg: #031a2b;
+  --bg-img: radial-gradient(at 15% 10%, #00c2d1 0, transparent 45%), radial-gradient(at 90% 30%, #2d6bff 0, transparent 45%), radial-gradient(at 50% 100%, #00e0a4 0, transparent 50%), linear-gradient(180deg, #04253d, #020f1a);
+  --glass: rgba(255,255,255,.10); --glass-hi: rgba(255,255,255,.16); --glass-line: rgba(255,255,255,.34);
+  --fg: #f2fbff; --muted: #a6c8d8; --soft: #d3eaf3;
+  --btn: radial-gradient(circle at 32% 24%, rgba(255,255,255,.95) 0 7%, rgba(255,255,255,0) 38%), radial-gradient(circle at 50% 60%, #5ff3ff, #1aa6d6 60%, #1460c8); --btn-fg: #032033;
+  --btn-shadow: 0 12px 30px rgba(20,180,255,.4), inset 0 -4px 10px rgba(0,40,90,.35);
+  --active: #7ff6ff;
+  --back: repeating-linear-gradient(135deg, #1aa6d6 0 3px, #1460c8 3px 6px);
+}
+[data-skin="opal"] {
+  --bg: #eef0fb;
+  --bg-img: radial-gradient(at 10% 10%, #ffc9ea 0, transparent 45%), radial-gradient(at 90% 15%, #b9ecff 0, transparent 45%), radial-gradient(at 80% 90%, #d9c8ff 0, transparent 45%), radial-gradient(at 15% 85%, #c6ffe3 0, transparent 45%), linear-gradient(180deg, #f7f4ff, #e9eefb);
+  --glass: rgba(255,255,255,.35); --glass-hi: rgba(255,255,255,.55); --glass-line: rgba(255,255,255,.95);
+  --table-shadow: 0 30px 50px rgba(90,80,160,.18); --scrim: rgba(60,50,110,.12);
+  --fg: #23213a; --muted: #6f6a8c; --soft: #46425f;
+  --btn: radial-gradient(circle at 32% 24%, rgba(255,255,255,.95) 0 7%, rgba(255,255,255,0) 38%), conic-gradient(from 200deg, #ffb8e2, #b3e5ff, #d2c0ff, #bdfbdc, #ffb8e2); --btn-fg: #23213a;
+  --btn-shadow: 0 12px 28px rgba(120,100,200,.3), inset 0 0 0 1px rgba(255,255,255,.8);
+  --active: #7a5cff;
+  --back: repeating-linear-gradient(135deg, #b9a8ff 0 3px, #8fd3ff 3px 6px);
+  --win: #13865a; --lose: #c53b5a;
+  color-scheme: light;
+}
+[data-skin="glut"] {
+  --bg: #1a0710;
+  --bg-img: radial-gradient(at 15% 10%, #ff4d6d 0, transparent 45%), radial-gradient(at 85% 35%, #ff9e3d 0, transparent 45%), radial-gradient(at 40% 100%, #b5179e 0, transparent 50%), linear-gradient(180deg, #2a0a18, #12040a);
+  --glass: rgba(255,255,255,.09); --glass-hi: rgba(255,255,255,.15); --glass-line: rgba(255,255,255,.3);
+  --fg: #fff4ef; --muted: #e3b3b6; --soft: #f6d6d1;
+  --btn: radial-gradient(circle at 32% 24%, rgba(255,255,255,.95) 0 7%, rgba(255,255,255,0) 38%), radial-gradient(circle at 50% 60%, #ffd08a, #ff7a45 55%, #e0306b); --btn-fg: #2a0710;
+  --btn-shadow: 0 12px 30px rgba(255,90,80,.45), inset 0 -4px 10px rgba(120,0,40,.3);
+  --active: #ffc36b;
+  --back: repeating-linear-gradient(135deg, #ff7a45 0 3px, #e0306b 3px 6px);
+  --win: #9dffc9; --lose: #ffb0b8;
+}
+:is([data-skin="lagune"], [data-skin="opal"], [data-skin="glut"]) {
+  --blur: blur(26px) saturate(190%);
+  --shadow: 0 12px 40px rgba(0,0,0,.22), inset 0 1px 1px rgba(255,255,255,.6), inset 0 -1px 1px rgba(255,255,255,.14), inset 1px 0 1px rgba(255,255,255,.18);
+}
+:is([data-skin="lagune"], [data-skin="opal"], [data-skin="glut"]) .table {
+  -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: inset 0 -2px 1px rgba(255,255,255,.4), inset 0 -22px 34px -10px rgba(255,255,255,.12), var(--table-shadow); }
+:is([data-skin="lagune"], [data-skin="opal"], [data-skin="glut"], [data-skin="kristall"]) .pill { box-shadow: inset 0 1px 1px rgba(255,255,255,.55), inset 0 -1px 1px rgba(255,255,255,.12), 0 6px 18px rgba(0,0,0,.14); }
+:is([data-skin="lagune"], [data-skin="opal"], [data-skin="glut"], [data-skin="kristall"]) .bgfx { background-size: 170% 170%; animation: flow 28s ease-in-out infinite alternate; }
+@keyframes flow { from { background-position: 0% 0%; } to { background-position: 100% 100%; } }
+
+/* Klassik: grüner Filz, gepolsterte Lederbande, Goldaufdruck, gedämpftes Licht wie im Casino */
+[data-skin="klassik"] {
+  --bg: #0c0705;
+  --bg-img: radial-gradient(ellipse 90% 45% at 50% 0%, rgba(255,205,130,.20), transparent 70%), radial-gradient(ellipse at 50% 45%, #2a170d 0, #120906 60%, #070403 100%);
+  --glass: rgba(255,235,200,.06); --glass-hi: rgba(30,17,9,.92); --glass-line: rgba(214,178,98,.38);
+  --shadow: 0 10px 30px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,230,180,.1);
+  --scrim: rgba(0,0,0,.5);
+  --fg: #f6edd8; --muted: #b8a682; --soft: #e2d5b8;
+  --btn: radial-gradient(circle at 35% 28%, #fff4c9, #e0b85c 45%, #a07428 80%, #6e4c14); --btn-fg: #2a1a05;
+  --btn-shadow: 0 10px 24px rgba(0,0,0,.6), inset 0 -3px 0 rgba(0,0,0,.25);
+  --active: #f0cf7a;
+  --card: linear-gradient(160deg, #fffdf6, #efe8d8); --card-fg: #111111; --red: #c0161f;
+  --back: repeating-linear-gradient(45deg, rgba(255,255,255,.2) 0 1px, transparent 1px 5px), repeating-linear-gradient(-45deg, rgba(255,255,255,.2) 0 1px, transparent 1px 5px), #a3131c;
+  --win: #8fe3a6; --lose: #ff8a7a;
+}
+[data-skin="klassik"] #menu, [data-skin="klassik"] .final h2 { font-family: "Playfair Display", Georgia, serif; letter-spacing: 0; }
+[data-skin="klassik"] .table { isolation: isolate; background: none; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; }
+[data-skin="klassik"] .table::before, [data-skin="klassik"] .table::after { content: ""; position: absolute; z-index: -1; pointer-events: none; border-radius: 0 0 50% 50% / 0 0 46% 46%; }
+[data-skin="klassik"] .table::before { inset: 0 -20px -22px;
+  background: radial-gradient(ellipse 60% 30% at 50% 96%, rgba(255,215,170,.22), transparent 70%), linear-gradient(180deg, #5c2f18, #3d1d0d 60%, #2a1307);
+  box-shadow: inset 0 -3px 2px rgba(255,220,180,.18), inset 0 -10px 18px rgba(0,0,0,.45), 0 28px 50px rgba(0,0,0,.75); }
+[data-skin="klassik"] .table::after { inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), radial-gradient(ellipse 80% 70% at 50% 25%, #23854d, #11592f 60%, #0a4022);
+  box-shadow: inset 0 0 0 2px rgba(212,175,90,.75), inset 0 0 0 4px rgba(0,0,0,.35), inset 0 0 90px rgba(0,0,0,.55); }
+[data-skin="klassik"] .print { display: block; }
+[data-skin="klassik"] .ring { border-color: rgba(230,196,112,.65); background: rgba(0,0,0,.08); }
+[data-skin="klassik"] .front { font-family: Georgia, "Times New Roman", serif; }
+[data-skin="klassik"] .face { box-shadow: 0 1px 0 #d8d0bd, 0 2px 0 #b9b19d, 0 8px 14px rgba(0,0,0,.5); }
+[data-skin="klassik"] .dl .lbl, [data-skin="klassik"] .spot .who { text-shadow: 0 1px 2px rgba(0,0,0,.6); }
+[data-skin="klassik"] .turn { margin-top: 32px; }
+[data-skin="klassik"] .seg button[aria-pressed="true"] { background: #e0b85c; color: #2a1a05; }
+.print { display: none; position: absolute; top: 94px; left: 50%; width: 300px; height: 74px; transform: translateX(-50%); pointer-events: none; overflow: visible; }
+.print text { font-family: "Playfair Display", Georgia, serif; fill: rgba(232,198,112,.78); }
+.print .p1 { font-size: 15px; font-weight: 700; letter-spacing: 2.5px; }
+.print .p2 { font-size: 8px; font-weight: 600; letter-spacing: 1.8px; fill: rgba(232,198,112,.6); }
+
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--fg); font-family: var(--sans); -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
 .bgfx { position: fixed; inset: 0; z-index: -1; background: var(--bg-img); }
@@ -137,7 +240,6 @@ header .info { margin-left: auto; font-size: 12px; color: var(--muted); text-ali
 .names { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .names input { width: 100%; box-sizing: border-box; font: inherit; font-size: 14px; color: var(--fg); padding: 9px 11px; border-radius: 10px; border: 1px solid var(--glass-line); background: var(--glass); }
 .skins { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
-.skins .now { font-size: 13px; color: var(--muted); margin-left: auto; }
 .sw { width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--glass-line); box-shadow: 0 2px 8px rgba(0,0,0,.25); transition: transform .15s; }
 .sw[aria-pressed="true"] { border-color: var(--active); transform: scale(1.12); }
 .sw[data-s="graphit"] { background: linear-gradient(135deg, #5a5e66, #1b1c1f); }
@@ -146,6 +248,27 @@ header .info { margin-left: auto; font-size: 12px; color: var(--muted); text-ali
 .sw[data-s="koralle"] { background: linear-gradient(135deg, #ffd29e, #ff9fb4 50%, #c7a8ff); }
 .sw[data-s="eis"]     { background: linear-gradient(135deg, #ffffff, #c4d3e6 55%, #546070); }
 .sw[data-s="neon"]    { background: linear-gradient(135deg, #c8ff00 0 38%, #06110d 62%); }
+.sw[data-s="klassik"] { background: radial-gradient(circle, #23854d 0 46%, #d4af5a 48% 54%, #5c2f18 57%); }
+.sw[data-s="kristall"] { background: linear-gradient(135deg, rgba(255,255,255,.85), rgba(255,255,255,.1) 60%), linear-gradient(135deg, #ff5ea8, #39b8ff 50%, #ffb347); }
+.sw[data-s="lagune"]  { background: linear-gradient(135deg, #5ff3ff, #1aa6d6 50%, #1460c8); }
+.sw[data-s="opal"]    { background: conic-gradient(#ffb8e2, #b3e5ff, #d2c0ff, #bdfbdc, #ffb8e2); }
+.sw[data-s="glut"]    { background: linear-gradient(135deg, #ffd08a, #ff7a45 45%, #e0306b); }
+.sw.lq { box-shadow: inset 0 2px 3px rgba(255,255,255,.75), inset 0 -2px 3px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.25); }
+.glabel { margin: 4px 0 -2px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+/* Einklappbare Bereiche im Menü */
+.panel { gap: 0; }
+.grp { border-top: 1px solid var(--glass-line); }
+.grp:first-child { border-top: 0; }
+.grp > summary { list-style: none; display: flex; align-items: center; gap: 10px; padding: 13px 2px; cursor: pointer; -webkit-user-select: none; user-select: none; }
+.grp > summary::-webkit-details-marker { display: none; }
+.grp > summary h3 { margin: 0; font-size: 15px; font-weight: 600; }
+.grp > summary .val { margin-left: auto; font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.grp > summary .chev { flex: none; }
+.grp[open] > summary .chev { transform: translateY(2px) rotate(-135deg); }
+.grp > summary:focus-visible { outline: 2px solid var(--active); outline-offset: 2px; border-radius: 8px; }
+.grp > .body { display: flex; flex-direction: column; gap: 10px; padding: 0 2px 16px; }
+#end { margin-top: 10px; }
 
 /* Mehrspieler */
 .mprow { display: flex; gap: 8px; }
@@ -273,7 +396,7 @@ button.chip:active { transform: translateY(2px); box-shadow: 0 0 0 rgba(0,0,0,.3
 .tray { display: flex; flex-wrap: wrap; gap: 6px; }
 .ctrl.center { justify-content: center; }
 .ctrl .pills { display: flex; gap: 10px; justify-content: center; width: 100%; }
-@media (prefers-reduced-motion: reduce) { .panel, .res, .final, .ripple, .toast { animation: none; } .chev, .sw, .ring, .ball { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .panel, .res, .final, .ripple, .toast, .bgfx { animation: none !important; } .chev, .sw, .ring, .ball { transition: none; } }
 </style>
 </head>
 <body>
@@ -284,62 +407,83 @@ button.chip:active { transform: translateY(2px); box-shadow: 0 0 0 rgba(0,0,0,.3
   <header>
     <button id="menu" aria-expanded="false" aria-controls="panel">Blackjack <span class="chev"></span></button>
     <div class="info num" id="info"></div>
-    <button class="help" id="help" aria-label="Tutorial öffnen">?</button>
+    <button class="help" id="help" aria-label="Tutorial öffnen" hidden>?</button>
   </header>
 
   <div class="panel glass" id="panel" hidden>
-    <div class="sec">
-      <h3>Mehrspieler</h3>
-      <div class="sec" id="mp"></div>
-    </div>
-    <div class="sec">
-      <h3>Spieler</h3>
-      <div class="seg" id="pseg">
-        <button data-n="1">1</button><button data-n="2">2</button><button data-n="3">3</button><button data-n="4">4</button><button data-n="5">5</button>
+    <details class="grp">
+      <summary><h3>Mehrspieler</h3><span class="val" id="v-mp"></span><span class="chev"></span></summary>
+      <div class="body"><div class="sec" id="mp"></div></div>
+    </details>
+    <details class="grp">
+      <summary><h3>Spieler</h3><span class="val" id="v-pl"></span><span class="chev"></span></summary>
+      <div class="body">
+        <div class="seg" id="pseg">
+          <button data-n="1">1</button><button data-n="2">2</button><button data-n="3">3</button><button data-n="4">4</button><button data-n="5">5</button>
+        </div>
+        <div class="names" id="names"></div>
+        <p class="note" id="plock" hidden></p>
       </div>
-      <div class="names" id="names"></div>
-      <p class="note" id="plock" hidden></p>
-    </div>
-    <div class="sec">
-      <h3>Farben</h3>
-      <div class="skins">
-        <button class="sw" data-s="graphit" aria-label="Graphit"></button>
-        <button class="sw" data-s="aurora" aria-label="Aurora"></button>
-        <button class="sw" data-s="smaragd" aria-label="Smaragd"></button>
-        <button class="sw" data-s="koralle" aria-label="Koralle"></button>
-        <button class="sw" data-s="eis" aria-label="Eis"></button>
-        <button class="sw" data-s="neon" aria-label="Neon"></button>
-        <span class="now" id="skinname"></span>
+    </details>
+    <details class="grp">
+      <summary><h3>Farben</h3><span class="val" id="skinname"></span><span class="chev"></span></summary>
+      <div class="body">
+        <p class="glabel">Casino</p>
+        <div class="skins">
+          <button class="sw" data-s="klassik" aria-label="Klassik"></button>
+        </div>
+        <p class="glabel">Liquid Glass</p>
+        <div class="skins">
+          <button class="sw lq" data-s="kristall" aria-label="Kristall"></button>
+          <button class="sw lq" data-s="lagune" aria-label="Lagune"></button>
+          <button class="sw lq" data-s="opal" aria-label="Opal"></button>
+          <button class="sw lq" data-s="glut" aria-label="Glut"></button>
+        </div>
+        <p class="glabel">Farben</p>
+        <div class="skins">
+          <button class="sw" data-s="graphit" aria-label="Graphit"></button>
+          <button class="sw" data-s="aurora" aria-label="Aurora"></button>
+          <button class="sw" data-s="smaragd" aria-label="Smaragd"></button>
+          <button class="sw" data-s="koralle" aria-label="Koralle"></button>
+          <button class="sw" data-s="eis" aria-label="Eis"></button>
+          <button class="sw" data-s="neon" aria-label="Neon"></button>
+        </div>
       </div>
-    </div>
-    <div class="sec">
-      <h3>Steuerung</h3>
-      <div class="seg" id="cseg"><button data-c="btn">Knöpfe</button><button data-c="gest">Gesten</button></div>
-      <p class="note" id="cnote"></p>
-    </div>
-    <div class="sec">
-      <h3>Um Geld spielen</h3>
-      <div class="seg" id="bseg">
-        <button data-b="0">Aus</button><button data-b="5">5 €</button><button data-b="10">10 €</button><button data-b="20">20 €</button><button data-b="50">50 €</button>
+    </details>
+    <details class="grp">
+      <summary><h3>Steuerung</h3><span class="val" id="v-ctrl"></span><span class="chev"></span></summary>
+      <div class="body">
+        <div class="seg" id="cseg"><button data-c="btn">Knöpfe</button><button data-c="gest">Gesten</button></div>
+        <p class="note" id="cnote"></p>
       </div>
-      <p class="note" id="rate"></p>
-    </div>
-    <div class="sec" id="ledgersec">
-      <h3>Abrechnung</h3>
-      <div id="ledger"></div>
-    </div>
-    <div class="sec">
-      <h3>Regeln</h3>
-      <ul class="rules">
-        <li>Blackjack zahlt 3 zu 2, ein normaler Sieg 1 zu 1.</li>
-        <li>Die Bank zieht bis 16 und bleibt ab 17 stehen.</li>
-        <li>Gespielt wird mit 6 Decks, gemischt wird, wenn weniger als 52 Karten übrig sind.</li>
-        <li>Doppeln geht mit den ersten zwei Karten, danach gibt es genau eine Karte.</li>
-        <li>Zwei Karten mit gleichem Wert lassen sich teilen, bis zu vier Hände. Geteilte Asse bekommen nur noch je eine Karte, und 21 nach dem Teilen zählt nicht als Blackjack.</li>
-        <li>Mindesteinsatz 10 Chips.</li>
-      </ul>
-      <button class="pill" id="tutopen">Tutorial ansehen</button>
-    </div>
+    </details>
+    <details class="grp">
+      <summary><h3>Um Geld spielen</h3><span class="val" id="v-buy"></span><span class="chev"></span></summary>
+      <div class="body">
+        <div class="seg" id="bseg">
+          <button data-b="0">Aus</button><button data-b="5">5 €</button><button data-b="10">10 €</button><button data-b="20">20 €</button><button data-b="50">50 €</button>
+        </div>
+        <p class="note" id="rate"></p>
+      </div>
+    </details>
+    <details class="grp" id="ledgersec">
+      <summary><h3>Abrechnung</h3><span class="val"></span><span class="chev"></span></summary>
+      <div class="body"><div id="ledger"></div></div>
+    </details>
+    <details class="grp">
+      <summary><h3>Regeln</h3><span class="val"></span><span class="chev"></span></summary>
+      <div class="body">
+        <ul class="rules">
+          <li>Blackjack zahlt 3 zu 2, ein normaler Sieg 1 zu 1.</li>
+          <li>Die Bank zieht bis 16 und bleibt ab 17 stehen.</li>
+          <li>Gespielt wird mit 6 Decks, gemischt wird, wenn weniger als 52 Karten übrig sind.</li>
+          <li>Doppeln geht mit den ersten zwei Karten, danach gibt es genau eine Karte.</li>
+          <li>Zwei Karten mit gleichem Wert lassen sich teilen, bis zu vier Hände. Geteilte Asse bekommen nur noch je eine Karte, und 21 nach dem Teilen zählt nicht als Blackjack.</li>
+          <li>Mindesteinsatz 10 Chips.</li>
+        </ul>
+        <button class="pill" id="tutopen">Tutorial ansehen</button>
+      </div>
+    </details>
     <button class="pill main" id="end">Spiel beenden</button>
   </div>
 
@@ -367,6 +511,11 @@ button.chip:active { transform: translateY(2px); box-shadow: 0 0 0 rgba(0,0,0,.3
   <div class="toast glass" id="toast" hidden role="status" aria-live="polite"></div>
 
   <section class="table" id="table">
+    <svg class="print" viewBox="0 0 300 74" aria-hidden="true">
+      <path id="arc1" d="M8 10 Q150 80 292 10" fill="none"/><path id="arc2" d="M44 30 Q150 86 256 30" fill="none"/>
+      <text class="p1"><textPath href="#arc1" startOffset="50%" text-anchor="middle">BLACKJACK ZAHLT 3 ZU 2</textPath></text>
+      <text class="p2"><textPath href="#arc2" startOffset="50%" text-anchor="middle">BANK ZIEHT BIS 16 · STEHT AB 17</textPath></text>
+    </svg>
     <div class="shoe" id="deck"><i></i><i></i><i></i></div>
     <div class="dl"><div class="hand" id="dhand"></div><div class="lbl" id="dlbl"></div></div>
     <div id="seats"></div>
@@ -380,7 +529,8 @@ button.chip:active { transform: translateY(2px); box-shadow: 0 0 0 rgba(0,0,0,.3
 const SUITS = ['♠', '♥', '♦', '♣'];
 const RANKS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 const MIN = 10, PACK = 1000, MAXP = 5, CHIPS = [10, 25, 50, 100];
-const SKINS = { graphit: 'Graphit', aurora: 'Aurora', smaragd: 'Smaragd', koralle: 'Koralle', eis: 'Eis', neon: 'Neon' };
+const SKINS = { klassik: 'Klassik', kristall: 'Kristall', lagune: 'Lagune', opal: 'Opal', glut: 'Glut',
+  graphit: 'Graphit', aurora: 'Aurora', smaragd: 'Smaragd', koralle: 'Koralle', eis: 'Eis', neon: 'Neon' };
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const sleep = ms => new Promise(r => setTimeout(r, reduce ? Math.min(ms, 120) : ms));
 const $ = id => document.getElementById(id);
@@ -567,7 +717,7 @@ function showFinal() {
   const guest = NET.mode === 'guest';
   $('fnew').hidden = guest;
   $('fback').textContent = guest ? 'Schließen' : 'Weiterspielen';
-  $('panel').hidden = true; $('menu').setAttribute('aria-expanded', false);
+  $('panel').hidden = true; $('help').hidden = true; $('menu').setAttribute('aria-expanded', false);
   $('final').hidden = false; $('scrim').hidden = false;
 }
 function hideFinal() { $('final').hidden = true; $('scrim').hidden = $('tut').hidden; }
@@ -585,6 +735,14 @@ const PEER_LIB = ['https://cdn.jsdelivr.net/npm/peerjs@1.5.5/dist/peerjs.min.js'
 const ROOM_PREFIX = 'h2ku-blackjack-';
 const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const REMOTE_ACTS = ['add', 'clear', 'rebuy', 'hit', 'stand', 'dbl', 'split'];
+// Mehrere STUN-Server finden den Weg durch die meisten Router; die TURN-Server leiten weiter, wenn keine direkte Verbindung klappt (z. B. Mobilfunk).
+const PEER_OPTS = { debug: 1, config: { iceServers: [
+  { urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'] },
+  { urls: 'stun:stun.cloudflare.com:3478' },
+  { urls: ['turn:eu-0.turn.peerjs.com:3478', 'turn:us-0.turn.peerjs.com:3478'], username: 'peerjs', credential: 'peerjsp' },
+  { urls: ['turn:openrelay.metered.ca:80', 'turn:openrelay.metered.ca:443', 'turn:openrelay.metered.ca:443?transport=tcp'], username: 'openrelayproject', credential: 'openrelayproject' }
+] } };
+const TRIES = 3, TRY_MS = 9000;
 const NET = { mode: 'off', peer: null, host: null, code: '', seat: 0, seats: [], conns: new Map(), online: [], status: '', busy: false, timer: 0 };
 const myId = (() => { let id = store.get('bj-cid'); if (!id) { id = Math.random().toString(36).slice(2, 12); store.set('bj-cid', id); } return id; })();
 const myName = () => store.get('bj-name') || (load().players || [])[0]?.name || 'Spieler';
@@ -623,7 +781,7 @@ async function hostRoom() {
   setStatus('Raum wird erstellt …', true);
   try { await loadPeer(); } catch (e) { return setStatus('Die Verbindungsbibliothek konnte nicht geladen werden. Bist du online?'); }
   const attempt = n => {
-    const code = newCode(), peer = new Peer(ROOM_PREFIX + code);
+    const code = newCode(), peer = new Peer(ROOM_PREFIX + code, PEER_OPTS);
     NET.peer = peer;
     peer.on('open', () => {
       if (NET.peer !== peer) return;
@@ -635,7 +793,7 @@ async function hostRoom() {
       toast(`Raum ${code} ist offen`);
     });
     peer.on('connection', conn => hostConn(conn));
-    peer.on('disconnected', () => { if (NET.peer === peer && NET.mode === 'host' && !peer.destroyed) setTimeout(() => { try { peer.reconnect(); } catch (e) {} }, 1500); });
+    peer.on('disconnected', () => { if (NET.peer === peer && NET.mode === 'host') { renderMp(); setTimeout(hostReconnect, 1500); } });
     peer.on('error', err => {
       if (NET.peer !== peer) return;
       if (NET.mode === 'host') { if (err.type !== 'peer-unavailable') toast('Verbindungsproblem: ' + (err.type || 'unbekannt')); return; }
@@ -646,6 +804,16 @@ async function hostRoom() {
   };
   attempt(0);
 }
+// Verliert der Host die Verbindung zum Vermittlungsserver (etwa weil der Browser kurz im Hintergrund war),
+// können keine neuen Spieler beitreten. Darum sofort und danach regelmäßig neu verbinden.
+function hostReconnect() {
+  const peer = NET.peer;
+  if (NET.mode !== 'host' || !peer || peer.destroyed || !peer.disconnected) return;
+  try { peer.reconnect(); } catch (e) {}
+  setTimeout(renderMp, 1500);
+}
+setInterval(hostReconnect, 5000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) hostReconnect(); });
 function syncOnline() { NET.online = NET.seats.map((cid, i) => i === 0 || NET.conns.has(cid)); }
 function sendAll(msg) { for (const c of NET.conns.values()) if (c.open) try { c.send(msg); } catch (e) {} }
 function hostConn(conn) {
@@ -712,21 +880,43 @@ async function joinRoom(raw) {
   const code = String(raw || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
   if (NET.busy || online()) return;
   if (code.length < 4) return setStatus('Bitte gib den Raumcode ein, den der Host dir zeigt.');
-  setStatus(`Verbinde mit Raum ${code} …`, true);
-  try { await loadPeer(); } catch (e) { return setStatus('Die Verbindungsbibliothek konnte nicht geladen werden. Bist du online?'); }
-  const peer = new Peer();
+  setStatus(`Verbinde mit Raum ${code} …`, true); toast(`Verbinde mit Raum ${code} …`);
+  try { await loadPeer(); } catch (e) { const m = 'Die Verbindungsbibliothek konnte nicht geladen werden. Bist du online?'; toast(m); return setStatus(m); }
+  const peer = new Peer(PEER_OPTS);
   NET.peer = peer;
-  const fail = msg => { if (NET.peer !== peer) return; if (NET.mode === 'guest') return leaveRoom(msg); NET.peer = null; clearTimeout(NET.timer); try { peer.destroy(); } catch (e) {} setStatus(msg); toast(msg); setUrl(''); };
-  NET.timer = setTimeout(() => fail(`Raum ${code} antwortet nicht.`), 15000);
-  peer.on('open', () => {
+  let conn = null, tries = 0, iceFailed = false;
+  const fail = msg => {
     if (NET.peer !== peer) return;
-    const conn = peer.connect(ROOM_PREFIX + code, { reliable: true, serialization: 'json' });
-    conn.on('open', () => conn.send({ t: 'hello', cid: myId, name: myName() }));
-    conn.on('data', m => onHostMsg(peer, conn, code, m));
-    conn.on('close', () => fail('Die Verbindung zum Raum ist getrennt.'));
-    conn.on('error', () => fail('Die Verbindung zum Raum ist getrennt.'));
+    if (NET.mode === 'guest') return leaveRoom(msg);
+    NET.peer = null; clearTimeout(NET.timer); try { peer.destroy(); } catch (e) {}
+    setStatus(msg); toast(msg); setUrl('');
+  };
+  // Klappt die direkte Verbindung nicht, wird es mit einer neuen Verbindung erneut versucht.
+  const attempt = () => {
+    if (NET.peer !== peer || NET.mode === 'guest') return;
+    if (tries >= TRIES) return fail(iceFailed
+      ? 'Eure Geräte konnten sich nicht verbinden. Probiert es, wenn beide im selben WLAN sind.'
+      : `Raum ${code} antwortet nicht. Ist die App beim Host geöffnet und im Vordergrund?`);
+    tries++;
+    if (tries > 1) setStatus(`Verbinde mit Raum ${code} … (Versuch ${tries} von ${TRIES})`, true);
+    if (conn) { const old = conn; conn = null; try { old.close(); } catch (e) {} }
+    const c = conn = peer.connect(ROOM_PREFIX + code, { reliable: true, serialization: 'json' });
+    const lost = () => { if (conn !== c) return; if (NET.mode === 'guest') fail('Die Verbindung zum Raum ist getrennt.'); else { clearTimeout(NET.timer); attempt(); } };
+    c.on('open', () => { if (conn === c) c.send({ t: 'hello', cid: myId, name: myName() }); });
+    c.on('data', m => { if (conn === c) onHostMsg(peer, c, code, m); });
+    c.on('iceStateChanged', st => { if (conn === c && (st === 'failed' || st === 'disconnected') && NET.mode !== 'guest') { iceFailed = true; } });
+    c.on('close', lost);
+    c.on('error', lost);
+    clearTimeout(NET.timer);
+    NET.timer = setTimeout(() => { if (conn === c && NET.mode !== 'guest') attempt(); }, TRY_MS);
+  };
+  peer.on('open', attempt);
+  peer.on('error', err => {
+    if (NET.peer !== peer || NET.mode === 'guest') return; // im Raum zählt nur die Verbindung zum Host
+    if (err.type === 'peer-unavailable') fail(`Raum ${code} wurde nicht gefunden. Stimmt der Code und ist die App beim Host geöffnet?`);
+    else if (err.type === 'network' || err.type === 'server-error' || err.type === 'socket-error') fail('Der Vermittlungsserver ist gerade nicht erreichbar. Versuch es gleich noch einmal.');
+    else fail('Die Verbindung hat nicht geklappt (' + (err.type || 'unbekannt') + ').');
   });
-  peer.on('error', err => fail(err.type === 'peer-unavailable' ? `Raum ${code} gibt es nicht (mehr).` : 'Die Verbindung hat nicht geklappt.'));
 }
 function onHostMsg(peer, conn, code, m) {
   if (NET.peer !== peer || !m || typeof m !== 'object') return;
@@ -800,7 +990,9 @@ function renderMp() {
       ${NET.status ? `<p class="note">${esc(NET.status)}</p>` : ''}`;
   } else {
     const host = NET.mode === 'host';
+    const lostSrv = host && NET.peer && NET.peer.disconnected;
     html = `<div class="room"><span class="note">Raumcode</span><b class="code num">${esc(NET.code)}</b></div>
+      ${lostSrv ? '<p class="note down">Verbindung zum Vermittlungsserver unterbrochen, wird neu aufgebaut. So lange kann niemand beitreten.</p>' : ''}
       <div class="plist">${plist()}</div>
       <div class="mprow">${host ? '<button class="pill main" data-mp="share">Einladen</button>' : ''}<button class="pill" data-mp="leave">${host ? 'Raum schließen' : 'Raum verlassen'}</button></div>
       <p class="note">${host
@@ -834,6 +1026,10 @@ function renderPanel() {
   document.querySelectorAll('#cseg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.c === S.ctrl));
   document.querySelectorAll('.sw').forEach(b => b.setAttribute('aria-pressed', b.dataset.s === S.skin));
   $('skinname').textContent = SKINS[S.skin];
+  $('v-mp').textContent = online() ? 'Raum ' + NET.code : 'Aus';
+  $('v-pl').textContent = online() ? `${S.n} im Raum` : S.n;
+  $('v-ctrl').textContent = S.ctrl === 'gest' ? 'Gesten' : 'Knöpfe';
+  $('v-buy').textContent = S.buyin ? eur(S.buyin) : 'Aus';
   $('cnote').textContent = S.ctrl === 'gest'
     ? 'Auf den Tisch tippen gibt eine Karte, zur Seite wischen heißt Stehen. Teilen und Doppeln bleiben als Knöpfe.'
     : 'Große Kugel für Karte, daneben Stehen, darunter Teilen und Doppeln.';
@@ -1051,7 +1247,7 @@ const ex = (cards, lbl) => `<div><div class="hand">${cards.map(([r, su]) => card
 const TUT = [
   { t: 'Willkommen am Tisch', b: () => `<div class="ex">${ex([['A', '♠'], ['K', '♥']], 'Ass und König: Blackjack')}</div>
     <p>In ein paar kurzen Schritten lernst du, wie Blackjack funktioniert und wie du diese App bedienst.</p>
-    <p>Du kannst das Tutorial jederzeit über das <b>?</b> oben rechts wieder öffnen.</p>` },
+    <p>Du kannst das Tutorial jederzeit wieder öffnen: Menü aufklappen und oben rechts auf <b>?</b> tippen.</p>` },
   { t: 'Das Ziel', b: () => `<p>Ihr spielt <b>gegen die Bank</b>, nicht gegeneinander. Wer mit seinen Karten näher an <b>21</b> kommt als die Bank, gewinnt.</p>
     <p>Aber Vorsicht: Wer über 21 kommt, hat <b>überkauft</b> und verliert sofort, egal was die Bank danach macht.</p>
     <div class="ex">${ex([['10', '♣'], ['9', '♦']], '19: gut')}${ex([['K', '♠'], ['6', '♥'], ['8', '♣']], '24: überkauft')}</div>` },
@@ -1080,8 +1276,8 @@ const TUT = [
   { t: 'Karte oder Geste', b: () => `<p>Im Menü unter <b>Steuerung</b> wählst du, wie du spielst:</p>
     <ul><li><b>Knöpfe</b>: die große Kugel gibt eine Karte, daneben stehen Stehen, Teilen und Doppeln.</li>
     <li><b>Gesten</b>: auf den Tisch tippen gibt eine Karte, zur Seite wischen heißt Stehen.</li></ul>` },
-  { t: 'Das Menü', b: () => `<p>Tippe oben links auf <b>Blackjack</b>, um das Menü zu öffnen. Dort findest du:</p>
-    <ul><li><b>Spieler</b>: wie viele an einem Gerät spielen, und ihre Namen.</li><li><b>Farben</b>: sechs Designs, darunter Neon.</li>
+  { t: 'Das Menü', b: () => `<p>Tippe oben links auf <b>Blackjack</b>, um das Menü zu öffnen. Die Bereiche sind eingeklappt, tippe auf eine Überschrift, um sie zu öffnen:</p>
+    <ul><li><b>Spieler</b>: wie viele an einem Gerät spielen, und ihre Namen.</li><li><b>Farben</b>: elf Designs, vom echten Casinotisch (<b>Klassik</b>) über durchsichtiges <b>Liquid Glass</b> bis <b>Neon</b>.</li>
     <li><b>Um Geld spielen</b>: jeder kauft sich für einen festen Betrag ein. Die Bank gehört allen, am Ende zeigt die Abrechnung, wer wem wie viel zahlt.</li>
     <li><b>Spiel beenden</b> zeigt die Endabrechnung.</li></ul>` },
   { t: 'Zusammen in einem Raum', b: () => `<p>Mit <b>Mehrspieler</b> im Menü spielt jeder am eigenen Handy am selben Tisch.</p>
@@ -1104,7 +1300,7 @@ function showTut(i) {
   $('tskip').hidden = tutI === TUT.length - 1;
 }
 function openTut() {
-  $('panel').hidden = true; $('menu').setAttribute('aria-expanded', false);
+  $('panel').hidden = true; $('help').hidden = true; $('menu').setAttribute('aria-expanded', false);
   $('tut').hidden = false; $('scrim').hidden = false; showTut(0); $('tnext').focus();
 }
 function closeTut() { $('tut').hidden = true; $('scrim').hidden = $('final').hidden; store.set('bj-tut', '1'); }
@@ -1123,6 +1319,7 @@ document.addEventListener('keydown', e => {
 // Menü
 function setMenu(open) {
   $('panel').hidden = $('scrim').hidden = !open;
+  $('help').hidden = !open;
   $('menu').setAttribute('aria-expanded', open);
   if (open) { renderNames(); renderPanel(); }
 }
