@@ -418,7 +418,34 @@ button.chip:active { transform: translateY(2px); box-shadow: 0 0 0 rgba(0,0,0,.3
 .pad .row .pill[data-act="ready"], .pad .row .pill[data-act="deal"] { flex: 1 1 54px; padding-inline: 4px; font-size: 13px; }
 .pad .mini-b { font-size: 12px; color: var(--soft); padding: 2px 7px; margin-left: 4px; border-radius: 999px; border: 1px solid var(--glass-line); }
 .pad .msg { flex: 1; font-size: 13px; color: var(--soft); }
+.pad .min-r { display: none; }
 .pad .res { font-size: 14px; }
+.pad { container-type: inline-size; }
+.pad .ico { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; display: block; margin: 0 auto; }
+.pad .ico-t { font-size: 16px; font-weight: 700; letter-spacing: -.02em; line-height: 20px; display: block; }
+.pad .row.acts .pill { padding: 8px 2px; display: grid; place-items: center; }
+.pad .pill .ico { display: none; }
+.pad .row.acts .pill .ico { display: block; }
+/* Schmale Flächen (vier oder fünf Spieler): kleinere Jetons, Symbole statt Text */
+@container (max-width: 190px) {
+  .pad .chip { width: 28px; height: 28px; } .pad .chip::before { inset: 3.5px; } .pad .chip span { font-size: 8px; }
+  .pad .tray { gap: 3px; flex: 1 0 100%; justify-content: space-between; }
+  .pad .min-h { display: none; }
+  .pad .min-r { display: block; margin-left: 0; padding: 6px 10px; }
+  .pad .ph .lbl, .pad .msg { display: none; }
+  .pad .ph > b { font-size: 14px; }
+  .pad .pill .t { display: none; }
+  .pad .pill .ico { display: block; }
+  .pad .row .pill[data-act="ready"], .pad .row .pill[data-act="deal"] { flex: 1 1 26px; padding: 6px 2px; }
+  .pad .row .pill[data-act="new"] { padding: 8px 4px; }
+  .pad .row.acts { gap: 4px; }
+}
+@container (max-width: 125px) {
+  .pad .chip { width: 22px; height: 22px; } .pad .chip::before { inset: 3px; } .pad .chip span { font-size: 6.5px; }
+  .pad .tray { gap: 2px; }
+  .pad .row.acts .pill { padding: 7px 0; }
+  .pad .ico { width: 18px; height: 18px; }
+}
 
 @media (orientation: landscape) and (min-width: 560px) {
   .app { max-width: 1100px; padding-block: 4px 8px; min-height: 100vh; min-height: 100dvh; }
@@ -432,6 +459,7 @@ button.chip:active { transform: translateY(2px); box-shadow: 0 0 0 rgba(0,0,0,.3
   .ring { width: 40px; height: 40px; }
   .spot { gap: 4px; }
   .turn, .ctrl { display: none; }
+  body.many .table { height: clamp(170px, calc(100vh - 182px), 440px); height: clamp(170px, calc(100dvh - 182px), 440px); }
   .pads { display: flex; gap: 10px; justify-content: center; margin-top: auto; padding-top: 8px; }
   [data-skin="klassik"] .print { display: none; }
   [data-skin="klassik"] .print2 { display: flex; justify-content: space-between; align-items: flex-start; position: absolute; top: 26px; left: 6%; right: 14%; pointer-events: none;
@@ -1260,10 +1288,21 @@ function render() {
   $('ctrl').innerHTML = land ? '' : ctrl;
   $('ctrl').classList.toggle('center', center);
   $('pads').innerHTML = land ? padsHtml() : '';
+  document.body.classList.toggle('many', land && mySeats().length >= 4);
   broadcast();
   animate();
 }
 
+// Schlichte Strich-Icons für die Bedienflächen
+const svgI = d => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
+const ICON = {
+  hit: svgI('<rect x="6.5" y="3" width="11" height="18" rx="2"/>'),
+  stand: svgI('<path d="M6 6l12 12M18 6L6 18"/>'),
+  split: svgI('<path d="M12 21v-7M12 14L6.5 6.5M12 14l5.5-7.5M6 11V6h5M18 11V6h-5"/>'),
+  dbl: '<span class="ico-t" aria-hidden="true">×2</span>',
+  ok: svgI('<path d="M5 12.5l4.5 4.5L19 7"/>'),
+  next: svgI('<path d="M5 12h13M13 6l6 6-6 6"/>')
+};
 // Querformat: eine Bedienfläche pro Mensch am Gerät, nebeneinander am unteren Rand
 function padsHtml() {
   const ps = active(), seats = mySeats(), guest = NET.mode === 'guest', host = NET.mode === 'host';
@@ -1274,8 +1313,8 @@ function padsHtml() {
     let body, on = false, sub = `<span class="num">${p.chips}</span>`;
     if (S.phase === 'bet') {
       const base = p._fresh ? 0 : p.bet;
-      sub = `Einsatz <b class="num">${p.chips < MIN ? 0 : p.bet}</b>`
-        + (p.chips < MIN ? '' : ` <button class="mini-b" data-act="clear" data-seat="${i}" aria-label="${esc(p.name)}: Mindesteinsatz">Min</button>`);
+      sub = `<span class="lbl">Einsatz </span><b class="num">${p.chips < MIN ? 0 : p.bet}</b>`
+        + (p.chips < MIN ? '' : ` <button class="mini-b min-h" data-act="clear" data-seat="${i}" aria-label="${esc(p.name)}: Mindesteinsatz">Min</button>`);
       on = !p.ready;
       if (p.chips < MIN) body = `<div class="row"><button class="pill" data-act="rebuy" data-seat="${i}">Nachkaufen${S.buyin ? ' · ' + eur(S.buyin) : ''}</button></div>`;
       else {
@@ -1283,19 +1322,22 @@ function padsHtml() {
         let go;
         if (guest) go = '<button class="pill" disabled>Warten</button>';
         else if (host) go = i === 0 ? `<button class="pill main" data-act="deal"${ok ? '' : ' disabled'}>Austeilen</button>` : '';
-        else go = `<button class="pill${p.ready ? '' : ' main'}" data-act="ready" data-seat="${i}" aria-pressed="${!!p.ready}">${humans === 1 ? 'Austeilen' : p.ready ? 'Bereit ✓' : 'Bereit'}</button>`;
-        body = `<div class="row"><div class="tray">${tray}</div>${go}</div>`;
+        else { const t = humans === 1 ? 'Austeilen' : p.ready ? 'Bereit ✓' : 'Bereit';
+          go = `<button class="pill${p.ready ? '' : ' main'}" data-act="ready" data-seat="${i}" aria-pressed="${!!p.ready}" aria-label="${t}" title="${t}"><span class="t">${t}</span>${humans === 1 ? ICON.next : ICON.ok}</button>`; }
+        body = `<div class="row"><div class="tray">${tray}</div><button class="mini-b min-r" data-act="clear" data-seat="${i}" aria-label="${esc(p.name)}: Mindesteinsatz">Min</button>${go}</div>`;
       }
     } else if (S.phase === 'play' && S.turn && S.turn.p === i) {
       on = true;
       const sp = canSplit() && !S.busy ? '' : ' disabled', db = canDbl() && !S.busy ? '' : ' disabled', off = S.busy ? ' disabled' : '';
       sub = `<b class="num">${value(curH().cards)}</b>${p.hands.length > 1 ? ` · Hand ${S.turn.h + 1}/${p.hands.length}` : ''}`;
-      body = `<div class="row acts"><button class="pill main" data-act="hit" data-seat="${i}"${off}>Karte</button><button class="pill" data-act="stand" data-seat="${i}"${off}>Stehen</button>`
-        + `<button class="pill" data-act="dbl" data-seat="${i}"${db}>Doppeln</button><button class="pill" data-act="split" data-seat="${i}"${sp}>Teilen</button></div>`;
+      body = `<div class="row acts"><button class="pill main" data-act="hit" data-seat="${i}" aria-label="Karte" title="Karte"${off}>${ICON.hit}</button>`
+        + `<button class="pill" data-act="stand" data-seat="${i}" aria-label="Stehen" title="Stehen"${off}>${ICON.stand}</button>`
+        + `<button class="pill" data-act="dbl" data-seat="${i}" aria-label="Doppeln" title="Doppeln"${db}>${ICON.dbl}</button>`
+        + `<button class="pill" data-act="split" data-seat="${i}" aria-label="Teilen" title="Teilen"${sp}>${ICON.split}</button></div>`;
     } else if (S.phase === 'end') {
       const res = p.hands.map(h => h.res).filter(Boolean).join(' / ');
       sub = `<span class="res num ${p.net > 0 ? 'w' : p.net < 0 ? 'l' : 'p'}">${p.net > 0 ? '+' : ''}${p.net}</span>`;
-      body = `<div class="row"><span class="msg">${esc(res)}</span>${guest ? '' : `<button class="pill main" data-act="new">Weiter</button>`}</div>`;
+      body = `<div class="row"><span class="msg">${esc(res)}</span>${guest ? '' : `<button class="pill main" data-act="new" aria-label="Weiter" title="Weiter"><span class="t">Weiter</span>${ICON.next}</button>`}</div>`;
     } else {
       const msg = S.phase === 'deal' ? 'Karten kommen …' : S.phase === 'dealer' ? 'Bank zieht …'
         : p.hands.every(h => h.done) ? (p.hands.some(h => value(h.cards) > 21) && p.hands.length === 1 ? 'Überkauft' : 'Steht') : 'Wartet';
